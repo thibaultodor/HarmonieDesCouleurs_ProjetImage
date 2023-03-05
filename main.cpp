@@ -1,5 +1,8 @@
 #include <stdio.h>
-#include "image_ppm.h"
+#include <iostream>
+//#include "image_ppm.h"
+#include "dominant_color.h"
+
 
 int main(int argc, char* argv[]){
     char NomImgLue[250], NomImgEcrite[250];
@@ -26,7 +29,17 @@ int main(int argc, char* argv[]){
 
     //fonctions à tester
 
-    ecrire_image_ppm(NomImgEcrite, ImgOut, nH, nW);
+    //Couleur dominante
+    std::vector<couleur> tabCouleur;
+    std::vector<int> tabNbOcc;
+    genTabCouleur(ImgIn, tabCouleur, tabNbOcc, nTaille);
+    couleur couleurDom;
+    int OccDom = 0;
+    couleurDominante(couleurDom, OccDom, tabCouleur, tabNbOcc);
+    std::cout << "La couleur dominante est : (" << couleurDom.r << ", " << couleurDom.g << ", " << couleurDom.b << ")" << std::endl;
+    std::cout << "Occurences : " << OccDom << std::endl;
+
+    //ecrire_image_ppm(NomImgEcrite, ImgOut, nH, nW);
     free(ImgIn); free(ImgOut);
 
     return 1;
