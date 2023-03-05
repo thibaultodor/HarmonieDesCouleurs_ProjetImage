@@ -34,10 +34,16 @@ int main(int argc, char* argv[]){
     std::vector<int> tabNbOcc;
     genTabCouleur(ImgIn, tabCouleur, tabNbOcc, nTaille);
     couleur couleurDom;
-    int OccDom = 0;
-    couleurDominante(couleurDom, OccDom, tabCouleur, tabNbOcc);
-    std::cout << "La couleur dominante est : (" << couleurDom.r << ", " << couleurDom.g << ", " << couleurDom.b << ")" << std::endl;
-    std::cout << "Occurences : " << OccDom << std::endl;
+    int OccDom = 0, index = 0;
+    //top 10
+    couleur* tab10CouleursDom;
+    int* tab10Occ;
+    //couleurDominante(couleurDom, OccDom, tabCouleur, tabNbOcc);
+    //std::cout << "La couleur dominante est : (" << couleurDom.r << ", " << couleurDom.g << ", " << couleurDom.b << ")" << std::endl;
+    //std::cout << "Occurences : " << OccDom << std::endl;
+    tabCouleursDominantes(tab10CouleursDom, tab10Occ, tabCouleur, tabNbOcc);
+    affiche10CouleursDom(tab10CouleursDom, tab10Occ);
+
 
     //ecrire_image_ppm(NomImgEcrite, ImgOut, nH, nW);
     free(ImgIn); free(ImgOut);

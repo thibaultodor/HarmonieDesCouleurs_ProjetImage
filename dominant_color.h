@@ -1,6 +1,7 @@
 #include "image_ppm.h"
 #include <vector>
 #include <algorithm>
+#include <iostream>
 
 struct couleur{
     int r,g,b;
@@ -35,19 +36,50 @@ void genTabCouleur(OCTET* ImgIn, std::vector<couleur> &tabCouleur, std::vector<i
     }
 }
 
-void couleurDominante(couleur &couleurDom, int &Occ, std::vector<couleur> &tabCouleur, std::vector<int> &nbOcc){
-    int maxOcc = 0, index = 0;
+void couleurDominante(couleur &couleurDom, int &Occ, int &index, std::vector<couleur> &tabCouleur, std::vector<int> &nbOcc){
+    int maxOcc = 0;
 
     for(int i=0; i < nbOcc.size(); i++){
         if(maxOcc < nbOcc[i]){
             maxOcc = nbOcc[i];
             index = i;
         }
-    }
+    }    
 
     couleurDom.r = tabCouleur[index].r;
     couleurDom.g = tabCouleur[index].g;
     couleurDom.b = tabCouleur[index].b;
     Occ = maxOcc;
+
+}
+
+void tabCouleursDominantes(couleur* tab10CouleursDom, int* tab10Occ, std::vector<couleur> &tabCouleur, std::vector<int> &nbOcc){
+    int maxOcc = 0, index = 0;
+    for(int i=0; i < 10; i++){
+        couleur c;
+        int o = 0;
+        couleurDominante(c, o, index, tabCouleur, nbOcc);
+        tab10CouleursDom[i] = c;
+        tab10Occ[i] = o;
+        tabCouleur.erase(tabCouleur.begin() + index);
+        nbOcc.erase(nbOcc.begin() + index);
+        std::cout << "taille : " << tabCouleur.size() << std::endl; 
+    }
+}
+
+void affiche10CouleursDom(couleur* tab10CouleursDom, int* tab10Occ){
+    OCTET *ImgTemp;
+    allocation_tableau(ImgTemp, OCTET, 10*3);
+
+    for(int i=0; i < 10; i++){
+        ImgTemp[i*3] = tab10CouleursDom[i].r;
+        ImgTemp[i*3+1] = tab10CouleursDom[i].g;
+        ImgTemp[i*3+2] = tab10CouleursDom[i].b;
+
+        std::cout << "RGB(" << tab10CouleursDom[i].r << "," << tab10CouleursDom[i].g << "," << tab10CouleursDom[i].b << ")" << std::endl;
+        std::cout << "Occurence : " << tab10Occ[i] << std::endl; 
+    }
+
+    ecrire_image_ppm("Palette10.ppm", ImgTemp, 10, 1);
 
 }
