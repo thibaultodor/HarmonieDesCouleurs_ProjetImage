@@ -32,9 +32,9 @@ int main(int argc, char* argv[]){
         listePixels.push_back(p);
     }
 
-    vector<Pixel> pdominant = get_dominant_colors(listePixels,10);
+    vector<Pixel> pdominant = get_dominant_colors(listePixels,4);
 
-    double range = 50;
+    double range = 100;
 
     for (int i = 0; i < pdominant.size(); ++i) {
         allocation_tableau(ImgOut, OCTET, nTaille3);

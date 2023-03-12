@@ -178,11 +178,14 @@ void HSLtoRGB(float h, float s, float l, OCTET & r, OCTET & g, OCTET & b) {
     }
 }
 
+void addDegree(double hB, double &h,double addvalue){
+    h = hB + addvalue;
+    if(h>360){h=h-360;}
+}
+
 void analogue(double h,double range,double &h1,double &h2){
-    h1 = h + range;
-    if(h1>360){h1=h1-360;}
-    h2 = h - range;
-    if(h2<0){h2=h2+360;}
+    addDegree(h,h1,range);
+    addDegree(h,h1,(360-range));
 }
 
 int isDegreeBetween(double degree, double degree1, double degree2) {
@@ -197,10 +200,11 @@ int isDegreeBetween(double degree, double degree1, double degree2) {
 
     //cout << d1 << " " << d2 << " : " << angle << endl;
 
-    if (d1 <= angle && d2 <= angle) { // check if both differences are less than or equal to the angle between the degrees
+    if (d1 >= angle && d2 >= angle) { // check if both differences are less than or equal to the angle between the degrees
         return 0;
     }
-    else if(d1 < d2){
+
+    else if(abs(angle-d1) < abs(angle-d2)){
         return 1;
     }
     else{

@@ -32,24 +32,24 @@ int main(int argc, char* argv[]){
         listePixels.push_back(p);
     }
 
-    vector<Pixel> pdominant = get_dominant_colors(listePixels,10);
+    vector<Pixel> pdominant = get_dominant_colors(listePixels,4);
 
     for (int i = 0; i < pdominant.size(); ++i) {
         allocation_tableau(ImgOut, OCTET, nTaille3);
         OCTET r = pdominant[i].r;OCTET g = pdominant[i].g;OCTET b = pdominant[i].b;
-        double hB,sB,lB,hC,sC,lC;
+        double hB,sB,lB,hC;
         RGBtoHSL(r,g,b,hB,sB,lB);
-        cout << hB << endl;
-        double central_angle_radians = hB * M_PI / 180.0;
-        hC = M_PI - central_angle_radians;
-        hC = hC * 180.0 / M_PI;
-        cout << hC << endl;
+        cout << "HB :" << hB << endl;
+        addDegree(hB,hC,180);
+        cout << "HC :" << hC << endl;
         vector<Pixel> listePixelsTransform;
         for (Pixel p:listePixels) {
             double hP,sP,lP;
             OCTET rP,gP,bP;
             RGBtoHSL(p.r,p.g,p.b,hP,sP,lP);
             if(abs(hP-hB) < abs(hP-hC)){
+                cout << "HP :" << hP << endl;
+                cout << "abs :" << abs(hP-hB) << "abs :" << abs(hP-hC) << endl;
                 HSLtoRGB(hB,sP,lP,rP,gP,bP);
             }
             else{
