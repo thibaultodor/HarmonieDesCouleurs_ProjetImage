@@ -6,7 +6,7 @@ struct couleur{
     int r,g,b;
 };
 
-/* std::vector<couleur> genTabRandCouleur(int nbCouleursPalette){
+std::vector<couleur> genTabRandomCouleur(int nbCouleursPalette){
     std::vector<couleur> tabCouleur;
     for(int i=0; i < nbCouleursPalette; i++ ){
         couleur randColor;
@@ -16,7 +16,7 @@ struct couleur{
         tabCouleur.push_back(randColor);
     }
     return tabCouleur;
-}; */
+};
 
 void genTabPalette(int *ImgIn, int nTaille, couleur *tabPalette, int tabPalSize){
     int index = ceil(nTaille/tabPalSize);
