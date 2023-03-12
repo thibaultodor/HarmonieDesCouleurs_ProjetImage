@@ -12,7 +12,7 @@ int main(int argc, char* argv[]){
     int tabPalSize;
 
     if(argc != 3){
-        printf("Usage : NomImgLue.ppm NomImgEcrite.ppm nbCouleursPalette\n");
+        printf("Usage : NomImgLue.ppm //NomImgEcrite.ppm nbCouleursPalette\n");
         exit(1);
     }
 
