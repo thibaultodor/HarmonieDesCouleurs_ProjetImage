@@ -98,6 +98,7 @@ void HarmonieDesCouleurs::on_actionCredits_triggered()
 
 
 Pixel couleur1, couleur2, couleur3, couleur4;
+
 void HarmonieDesCouleurs::on_dom_colors_clicked()
 {
     if(imageValide){
@@ -124,6 +125,29 @@ void HarmonieDesCouleurs::on_dom_colors_clicked()
                        "Il n'y a pas d'image choisie."
                        "<br>"
                        "<center>Sélectionnez une image valide.</center><br>");
+        ErreurFenetre->setLayout(new QVBoxLayout());
+        ErreurFenetre->layout()->addWidget((ErreurTexte));
+
+        ErreurFenetre->exec();
+    }
+}
+
+void HarmonieDesCouleurs::on_Supprimer_clicked()
+{
+    if(imageValide){
+        imageValide = false;
+        nomFichier = NULL;
+        cheminFichier = "Chemin du fichier...";
+        ui->cheminParcourir->setText(cheminFichier);
+        ui->init_image_label->clear();
+        ui->init_image_label->setText("Choisir une image...");
+    } else {
+        QDialog *ErreurFenetre = new QDialog(this);
+        ErreurFenetre->setWindowTitle("Erreur");
+
+        QLabel *ErreurTexte = new QLabel(ErreurFenetre);
+        ErreurTexte->setText("<center>Attention erreur &#x2F </center><br><br>"
+                       "<center>Il n'y a pas d'image à supprimer.</center><br>");
         ErreurFenetre->setLayout(new QVBoxLayout());
         ErreurFenetre->layout()->addWidget((ErreurTexte));
 

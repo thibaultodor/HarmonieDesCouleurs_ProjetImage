@@ -35,6 +35,7 @@ public:
     QHBoxLayout *horizontalLayout_3;
     QLabel *cheminParcourir;
     QPushButton *Parcourir;
+    QPushButton *Supprimer;
     QSpacerItem *horizontalSpacer;
     QPushButton *colorSelector;
     QLabel *background;
@@ -104,13 +105,20 @@ public:
 
         horizontalLayout_3->addWidget(Parcourir);
 
-        horizontalSpacer = new QSpacerItem(150, 36, QSizePolicy::Maximum, QSizePolicy::Minimum);
+        Supprimer = new QPushButton(horizontalLayoutWidget);
+        Supprimer->setObjectName(QString::fromUtf8("Supprimer"));
+        Supprimer->setMaximumSize(QSize(80, 25));
+        Supprimer->setStyleSheet(QString::fromUtf8("font: 11pt \"Sawasdee\";"));
+
+        horizontalLayout_3->addWidget(Supprimer);
+
+        horizontalSpacer = new QSpacerItem(100, 36, QSizePolicy::Maximum, QSizePolicy::Minimum);
 
         horizontalLayout_3->addItem(horizontalSpacer);
 
         colorSelector = new QPushButton(centralwidget);
         colorSelector->setObjectName(QString::fromUtf8("colorSelector"));
-        colorSelector->setGeometry(QRect(400, 60, 201, 31));
+        colorSelector->setGeometry(QRect(380, 60, 200, 30));
         colorSelector->setStyleSheet(QString::fromUtf8("font: 11pt \"Sawasdee\";"));
         background = new QLabel(centralwidget);
         background->setObjectName(QString::fromUtf8("background"));
@@ -152,7 +160,7 @@ public:
         init_legende->setAlignment(Qt::AlignCenter);
         final_polaroid = new QFrame(centralwidget);
         final_polaroid->setObjectName(QString::fromUtf8("final_polaroid"));
-        final_polaroid->setGeometry(QRect(630, 60, 320, 360));
+        final_polaroid->setGeometry(QRect(600, 60, 320, 360));
         final_polaroid->setAutoFillBackground(false);
         final_polaroid->setStyleSheet(QString::fromUtf8("background-color: rgb(255, 255, 255);"));
         final_polaroid->setFrameShape(QFrame::StyledPanel);
@@ -180,19 +188,21 @@ public:
         final_legende->setAlignment(Qt::AlignCenter);
         dom_colors = new QPushButton(centralwidget);
         dom_colors->setObjectName(QString::fromUtf8("dom_colors"));
-        dom_colors->setGeometry(QRect(440, 330, 89, 25));
+        dom_colors->setGeometry(QRect(50, 423, 300, 30));
+        dom_colors->setStyleSheet(QString::fromUtf8("font: 11pt \"Sawasdee\";"));
         d_color_1 = new QPushButton(centralwidget);
         d_color_1->setObjectName(QString::fromUtf8("d_color_1"));
-        d_color_1->setGeometry(QRect(40, 460, 89, 25));
+        d_color_1->setGeometry(QRect(120, 455, 40, 40));
+        d_color_1->setCheckable(false);
         d_color_2 = new QPushButton(centralwidget);
         d_color_2->setObjectName(QString::fromUtf8("d_color_2"));
-        d_color_2->setGeometry(QRect(130, 460, 89, 25));
+        d_color_2->setGeometry(QRect(160, 455, 40, 40));
         d_color_3 = new QPushButton(centralwidget);
         d_color_3->setObjectName(QString::fromUtf8("d_color_3"));
-        d_color_3->setGeometry(QRect(220, 460, 89, 25));
+        d_color_3->setGeometry(QRect(200, 455, 40, 40));
         d_color_4 = new QPushButton(centralwidget);
         d_color_4->setObjectName(QString::fromUtf8("d_color_4"));
-        d_color_4->setGeometry(QRect(310, 460, 89, 25));
+        d_color_4->setGeometry(QRect(240, 455, 40, 40));
         HarmonieDesCouleurs->setCentralWidget(centralwidget);
         background->raise();
         horizontalLayoutWidget->raise();
@@ -233,17 +243,18 @@ public:
         actionQuitter->setText(QCoreApplication::translate("HarmonieDesCouleurs", "Quitter", nullptr));
         cheminParcourir->setText(QCoreApplication::translate("HarmonieDesCouleurs", "Chemin du fichier...", nullptr));
         Parcourir->setText(QCoreApplication::translate("HarmonieDesCouleurs", "Parcourir", nullptr));
+        Supprimer->setText(QCoreApplication::translate("HarmonieDesCouleurs", "Supprimer", nullptr));
         colorSelector->setText(QCoreApplication::translate("HarmonieDesCouleurs", "S\303\251lectionner une couleur", nullptr));
         background->setText(QString());
         init_image_label->setText(QCoreApplication::translate("HarmonieDesCouleurs", "Choisir une image...", nullptr));
         init_legende->setText(QCoreApplication::translate("HarmonieDesCouleurs", "Image Originale", nullptr));
         final_image_label->setText(QCoreApplication::translate("HarmonieDesCouleurs", "Veuillez s\303\251lectionner une image source...", nullptr));
         final_legende->setText(QCoreApplication::translate("HarmonieDesCouleurs", "Image Modifi\303\251e", nullptr));
-        dom_colors->setText(QCoreApplication::translate("HarmonieDesCouleurs", "Afficher", nullptr));
-        d_color_1->setText(QCoreApplication::translate("HarmonieDesCouleurs", "couleur1", nullptr));
-        d_color_2->setText(QCoreApplication::translate("HarmonieDesCouleurs", "couleur2", nullptr));
-        d_color_3->setText(QCoreApplication::translate("HarmonieDesCouleurs", "couleur3", nullptr));
-        d_color_4->setText(QCoreApplication::translate("HarmonieDesCouleurs", "couleur4", nullptr));
+        dom_colors->setText(QCoreApplication::translate("HarmonieDesCouleurs", "G\303\251n\303\251ration couleurs dominantes", nullptr));
+        d_color_1->setText(QString());
+        d_color_2->setText(QString());
+        d_color_3->setText(QString());
+        d_color_4->setText(QString());
         menuMenu->setTitle(QCoreApplication::translate("HarmonieDesCouleurs", "Menu", nullptr));
     } // retranslateUi
 

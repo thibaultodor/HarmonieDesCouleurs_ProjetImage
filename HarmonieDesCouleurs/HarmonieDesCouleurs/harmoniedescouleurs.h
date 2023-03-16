@@ -26,6 +26,8 @@ private slots:
 
     void on_dom_colors_clicked();
 
+    void on_Supprimer_clicked();
+
 private:
     Ui::HarmonieDesCouleurs *ui;
 };

@@ -118,6 +118,22 @@ font: 11pt &quot;Sawasdee&quot;;
       </widget>
      </item>
      <item>
+      <widget class="QPushButton" name="Supprimer">
+       <property name="maximumSize">
+        <size>
+         <width>80</width>
+         <height>25</height>
+        </size>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">font: 11pt &quot;Sawasdee&quot;;</string>
+       </property>
+       <property name="text">
+        <string>Supprimer</string>
+       </property>
+      </widget>
+     </item>
+     <item>
       <spacer name="horizontalSpacer">
        <property name="orientation">
         <enum>Qt::Horizontal</enum>
@@ -127,7 +143,7 @@ font: 11pt &quot;Sawasdee&quot;;
        </property>
        <property name="sizeHint" stdset="0">
         <size>
-         <width>150</width>
+         <width>100</width>
          <height>36</height>
         </size>
        </property>
@@ -138,10 +154,10 @@ font: 11pt &quot;Sawasdee&quot;;
    <widget class="QPushButton" name="colorSelector">
     <property name="geometry">
      <rect>
-      <x>400</x>
+      <x>380</x>
       <y>60</y>
-      <width>201</width>
-      <height>31</height>
+      <width>200</width>
+      <height>30</height>
      </rect>
     </property>
     <property name="styleSheet">
@@ -272,7 +288,7 @@ background-position: center;</string>
    <widget class="QFrame" name="final_polaroid">
     <property name="geometry">
      <rect>
-      <x>630</x>
+      <x>600</x>
       <y>60</y>
       <width>320</width>
       <height>360</height>
@@ -368,66 +384,72 @@ background-position: center;</string>
    <widget class="QPushButton" name="dom_colors">
     <property name="geometry">
      <rect>
-      <x>440</x>
-      <y>330</y>
-      <width>89</width>
-      <height>25</height>
+      <x>50</x>
+      <y>423</y>
+      <width>300</width>
+      <height>30</height>
      </rect>
     </property>
+    <property name="styleSheet">
+     <string notr="true">font: 11pt &quot;Sawasdee&quot;;</string>
+    </property>
     <property name="text">
-     <string>Afficher</string>
+     <string>Génération couleurs dominantes</string>
     </property>
    </widget>
    <widget class="QPushButton" name="d_color_1">
     <property name="geometry">
      <rect>
-      <x>40</x>
-      <y>460</y>
-      <width>89</width>
-      <height>25</height>
+      <x>120</x>
+      <y>455</y>
+      <width>40</width>
+      <height>40</height>
      </rect>
     </property>
     <property name="text">
-     <string>couleur1</string>
+     <string/>
+    </property>
+    <property name="checkable">
+     <bool>false</bool>
     </property>
    </widget>
    <widget class="QPushButton" name="d_color_2">
     <property name="geometry">
      <rect>
-      <x>130</x>
-      <y>460</y>
-      <width>89</width>
-      <height>25</height>
+      <x>160</x>
+      <y>455</y>
+      <width>40</width>
+      <height>40</height>
      </rect>
     </property>
     <property name="text">
-     <string>couleur2</string>
+     <string/>
     </property>
    </widget>
    <widget class="QPushButton" name="d_color_3">
     <property name="geometry">
      <rect>
-      <x>220</x>
-      <y>460</y>
-      <width>89</width>
-      <height>25</height>
+      <x>200</x>
+      <y>455</y>
+      <width>40</width>
+      <height>40</height>
      </rect>
     </property>
     <property name="text">
-     <string>couleur3</string>
+     <string/>
     </property>
    </widget>
    <widget class="QPushButton" name="d_color_4">
     <property name="geometry">
      <rect>
-      <x>310</x>
-      <y>460</y>
-      <width>89</width>
-      <height>25</height>
+      <x>240</x>
+      <y>455</y>
+      <width>40</width>
+      <height>40</height>
      </rect>
     </property>
     <property name="text">
-     <string>couleur4</string>
+     <string/>
     </property>
    </widget>
    <zorder>background</zorder>
