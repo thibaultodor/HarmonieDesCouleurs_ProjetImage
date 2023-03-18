@@ -1,11 +1,13 @@
-#include <iostream>
-#include <vector>
-#include <cmath>
+//
+// Created by thibault on 3/11/23.
+//
 #include "harmony.h"
 
 int main(int argc, char* argv[]){
     char cNomImgLue[250];
-    int nH, nW, nTaille;
+    int nH, nW, nTaille,number_of_dominant_color;
+
+    number_of_dominant_color = 4;
 
     int taille_palette = 512;
 
@@ -21,25 +23,18 @@ int main(int argc, char* argv[]){
 
     lire_nb_lignes_colonnes_image_ppm(cNomImgLue, &nH, &nW);
     nTaille = nH * nW;
-
     int nTaille3 = nTaille * 3;
     allocation_tableau(ImgIn, OCTET, nTaille3);
     allocation_tableau(Palette, OCTET, (taille_palette*taille_palette)*3);
     lire_image_ppm(cNomImgLue, ImgIn, nH * nW);
 
     vector<Pixel> listePixels;
+    for (int i=0; i < nTaille3; i+=3){Pixel p = {ImgIn[i],ImgIn[i+1],ImgIn[i+2]};listePixels.push_back(p);}
+    vector<Pixel> pdominant = get_dominant_colors(listePixels,number_of_dominant_color);
 
-    for (int i=0; i < nTaille3; i+=3)
-    {
-        Pixel p = {ImgIn[i],ImgIn[i+1],ImgIn[i+2]};
-        listePixels.push_back(p);
-    }
-
-    vector<Pixel> pdominant = get_dominant_colors(listePixels,4);
-
-    for (Pixel p:pdominant) {
-        cout << (int)p.r << " " << (int)p.g << " " << (int)p.b << endl;
-    }
+    ComplementaryHarmony(pdominant,listePixels,nH,nW,20);
+    AnalogueHarmony(pdominant,listePixels,nH,nW,1);
+    TriadiqueHarmony(pdominant,listePixels,nH,nW,1);
 
     nW = taille_palette*3;nH=taille_palette*3;
 
