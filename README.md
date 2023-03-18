@@ -1,1 +1,1 @@
-# HarmonieDesCouleurs_ProjetImage
+# Algorithme d'harmonisation d'images
