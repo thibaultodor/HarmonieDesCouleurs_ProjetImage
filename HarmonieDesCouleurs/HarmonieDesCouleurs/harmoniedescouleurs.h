@@ -24,6 +24,10 @@ private slots:
 
     void on_actionCredits_triggered();
 
+    void on_dom_colors_clicked();
+
+    void on_Supprimer_clicked();
+
 private:
     Ui::HarmonieDesCouleurs *ui;
 };
