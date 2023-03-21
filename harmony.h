@@ -1,7 +1,3 @@
-//
-// Created by thibault on 3/11/23.
-//
-
 #ifndef HARMONIEDESCOULEURS_PROJETIMAGE_HARMONY_H
 #define HARMONIEDESCOULEURS_PROJETIMAGE_HARMONY_H
 
@@ -286,6 +282,48 @@ void ComplementaryHarmony(const std::vector<Pixel> &pdominant,const std::vector<
         ecrire_image_ppm(("Complementary"+ to_string(i)+".ppm").data(),ImgOut,nH,nW);
     }
 }
+
+void ComplementaryHarmonyQT(const Pixel &cdominant,char * filePath,double sizeBand){
+    OCTET *ImgOut,*ImgIn;
+    int nH,nW;
+    lire_nb_lignes_colonnes_image_ppm(filePath, &nH, &nW);
+    int nTaille = nH * nW;
+    int nTaille3 = nTaille * 3;
+    allocation_tableau(ImgIn, OCTET, nTaille3);
+    allocation_tableau(ImgOut, OCTET, nTaille3);
+    lire_image_ppm(filePath, ImgIn, nH * nW);
+    vector<Pixel> listePixels;
+    for (int i=0; i < nTaille3; i+=3){Pixel p = {ImgIn[i],ImgIn[i+1],ImgIn[i+2]};listePixels.push_back(p);}
+    OCTET r = cdominant.r;OCTET g = cdominant.g;OCTET b = cdominant.b;
+    double hB,sB,lB,hC;
+    RGBtoHSL(r,g,b,hB,sB,lB);
+    addDegree(hB,hC,180);
+    std::vector<double> hList;
+    hList.emplace_back(hB);
+    hList.emplace_back(hC);
+    double influenceSize = (float)(360. / (double)hList.size());
+    double radius = influenceSize / 2.;
+    vector<Pixel> listePixelsTransform;
+    for (Pixel p:listePixels) {
+        double hP,sP,lP;
+        OCTET rP,gP,bP;
+        RGBtoHSL(p.r,p.g,p.b,hP,sP,lP);
+        std::vector<double> vectorDistance = distanceMin(hList,hP);
+        double distance = vectorDistance[1];
+        double Color_Out = (distance / radius) * (sizeBand / 2) + vectorDistance[0];
+        HSLtoRGB((float)Color_Out,(float)sP,(float)lP,rP,gP,bP);
+        Pixel pT = {rP,gP,bP};
+        listePixelsTransform.emplace_back(pT);
+    }
+    for (int z=0; z < nTaille3; z+=3)
+    {
+        ImgOut[z] = listePixelsTransform[z/3].r;
+        ImgOut[z+1] = listePixelsTransform[z/3].g;
+        ImgOut[z+2] = listePixelsTransform[z/3].b;
+    }
+    ecrire_image_ppm("Image_Transform.ppm",ImgOut,nH,nW);
+}
+
 
 void AnalogueHarmony(const std::vector<Pixel> &pdominant,const std::vector<Pixel>& listePixels,int nH,int nW,double sizeBand){
     OCTET *ImgOut;

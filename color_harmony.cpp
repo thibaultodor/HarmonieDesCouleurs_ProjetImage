@@ -36,6 +36,8 @@ int main(int argc, char* argv[]){
     AnalogueHarmony(pdominant,listePixels,nH,nW,1);
     TriadiqueHarmony(pdominant,listePixels,nH,nW,1);
 
+    ComplementaryHarmonyQT(pdominant[0],cNomImgLue,20);
+
     nW = taille_palette*3;nH=taille_palette*3;
 
     for (int i = 0; i < nH/2; i+=3) {
