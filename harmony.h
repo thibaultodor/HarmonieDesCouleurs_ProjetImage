@@ -288,7 +288,7 @@ void ComplementaryHarmonyQT(const Pixel &cdominant,char * filePath,double sizeBa
     int nH,nW;
     lire_nb_lignes_colonnes_image_ppm(filePath, &nH, &nW);
     int nTaille = nH * nW;
-    int nTaille3 = nTaille * 3;
+    int nTaille3 = nTaille *3;
     allocation_tableau(ImgIn, OCTET, nTaille3);
     allocation_tableau(ImgOut, OCTET, nTaille3);
     lire_image_ppm(filePath, ImgIn, nH * nW);

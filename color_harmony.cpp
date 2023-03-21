@@ -7,7 +7,7 @@ int main(int argc, char* argv[]){
     char cNomImgLue[250];
     int nH, nW, nTaille,number_of_dominant_color;
 
-    number_of_dominant_color = 4;
+    number_of_dominant_color =4;
 
     int taille_palette = 512;
 
