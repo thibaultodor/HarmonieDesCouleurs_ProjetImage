@@ -32,11 +32,11 @@ int main(int argc, char* argv[]){
     for (int i=0; i < nTaille3; i+=3){Pixel p = {ImgIn[i],ImgIn[i+1],ImgIn[i+2]};listePixels.push_back(p);}
     vector<Pixel> pdominant = get_dominant_colors(listePixels,number_of_dominant_color);
 
-    ComplementaryHarmony(pdominant,listePixels,nH,nW,20);
-    AnalogueHarmony(pdominant,listePixels,nH,nW,1);
-    TriadiqueHarmony(pdominant,listePixels,nH,nW,1);
-
-    ComplementaryHarmonyQT(pdominant[0],cNomImgLue,20);
+    AnalogueHarmony(pdominant,listePixels,nH,nW,2);
+    ComplementaryHarmony(pdominant,listePixels,nH,nW,2);
+    TriadiqueHarmony(pdominant,listePixels,nH,nW,2);
+    //ComplementaryHarmonyQT(pdominant[0],cNomImgLue,1);
+    SquareHarmony(pdominant,listePixels,nH,nW,2);
 
     nW = taille_palette*3;nH=taille_palette*3;
 
