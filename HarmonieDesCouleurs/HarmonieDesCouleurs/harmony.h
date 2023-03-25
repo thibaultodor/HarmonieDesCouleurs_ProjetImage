@@ -168,9 +168,9 @@ void HSLtoRGB(float h, float s, float l, OCTET & r, OCTET & g, OCTET & b) {
         tg = tg < 0 ? tg + 1 : (tg > 1 ? tg - 1 : tg);
         tb = tb < 0 ? tb + 1 : (tb > 1 ? tb - 1 : tb);
 
-        r = (OCTET)std::round((tr < 1.0 / 6.0) ? p + (q - p) * 6 * tr : (tr < 1.0 / 2.0) ? q : (tr < 2.0 / 3.0) ? p + (q - p) * (2.0 / 3.0 - tr) * 6 : p) * 255;
-        g = (OCTET)std::round((tg < 1.0 / 6.0) ? p + (q - p) * 6 * tg : (tg < 1.0 / 2.0) ? q : (tg < 2.0 / 3.0) ? p + (q - p) * (2.0 / 3.0 - tg) * 6 : p) * 255;
-        b = (OCTET)std::round((tb < 1.0 / 6.0) ? p + (q - p) * 6 * tb : (tb < 1.0 / 2.0) ? q : (tb < 2.0 / 3.0) ? p + (q - p) * (2.0 / 3.0 - tb) * 6 : p) * 255;
+        r = ((tr < 1.0 / 6.0) ? p + (q - p) * 6 * tr : (tr < 1.0 / 2.0) ? q : (tr < 2.0 / 3.0) ? p + (q - p) * (2.0 / 3.0 - tr) * 6 : p) * 255;
+        g = ((tg < 1.0 / 6.0) ? p + (q - p) * 6 * tg : (tg < 1.0 / 2.0) ? q : (tg < 2.0 / 3.0) ? p + (q - p) * (2.0 / 3.0 - tg) * 6 : p) * 255;
+        b = ((tb < 1.0 / 6.0) ? p + (q - p) * 6 * tb : (tb < 1.0 / 2.0) ? q : (tb < 2.0 / 3.0) ? p + (q - p) * (2.0 / 3.0 - tb) * 6 : p) * 255;
     }
 }
 
@@ -208,5 +208,364 @@ int isDegreeBetween(double degree, double degree1, double degree2) {
     }
 }
 
+vector<double> distanceMin(std::vector<double> hList,double hRef){
+    int valRef = lround(hRef);
+    std::vector<int> listDistance;
+    std::vector<bool> isNegatif;
+    for (double h:hList) {
+        int valH = lround(h);
+        int nbPasPLUS = 0;
+        while(valH != valRef){
+            if(valH != 361){valH++;nbPasPLUS++;}
+            else{valH=0;}
+        }
+        valH = lround(h);
+        int nbPasMOINS = 0;
+        while(valH != valRef){
+            if(valH != -1){valH--;nbPasMOINS++;}
+            else{valH=360;}
+        }
+        int valMIN = std::min(nbPasPLUS,nbPasMOINS);
+        if(valMIN==nbPasPLUS){
+            isNegatif.emplace_back(false);
+        }
+        else{
+            isNegatif.emplace_back(true);
+        }
+        listDistance.emplace_back(valMIN);
+    }
+    int minIndex = 0;
+    for (int i = 1; i < hList.size(); ++i) {
+        if(listDistance[minIndex] > listDistance[i]){minIndex=i;}
+    }
+    double valReturn = listDistance[minIndex];
+    if(isNegatif[minIndex]){valReturn *= -1.;}
+    std::vector<double> vectorReturn;
+    vectorReturn.emplace_back(hList[minIndex]);
+    vectorReturn.emplace_back(valReturn);
+    return vectorReturn;
+}
+
+void ComplementaryHarmony(const std::vector<Pixel> &pdominant,const std::vector<Pixel>& listePixels,int nH,int nW,double sizeBand){
+    OCTET *ImgOut;
+    int nTaille = nH * nW;
+    int nTaille3 = nTaille * 3;
+    for (int i = 0; i < pdominant.size(); ++i) {
+        allocation_tableau(ImgOut, OCTET, nTaille3);
+        OCTET r = pdominant[i].r;OCTET g = pdominant[i].g;OCTET b = pdominant[i].b;
+        double hB,sB,lB,hC;
+        RGBtoHSL(r,g,b,hB,sB,lB);
+        addDegree(hB,hC,180);
+        std::vector<double> hList;
+        hList.emplace_back(hB);
+        hList.emplace_back(hC);
+        double influenceSize = (float)(360. / (double)hList.size());
+        double radius = influenceSize / 2.;
+        vector<Pixel> listePixelsTransform;
+        for (Pixel p:listePixels) {
+            double hP,sP,lP;
+            OCTET rP,gP,bP;
+            RGBtoHSL(p.r,p.g,p.b,hP,sP,lP);
+            std::vector<double> vectorDistance = distanceMin(hList,hP);
+            double distance = vectorDistance[1];
+            double Color_Out = (distance / radius) * (sizeBand / 2) + vectorDistance[0];
+            HSLtoRGB((float)Color_Out,(float)sP,(float)lP,rP,gP,bP);
+            Pixel pT = {rP,gP,bP};
+            listePixelsTransform.emplace_back(pT);
+        }
+        for (int z=0; z < nTaille3; z+=3)
+        {
+            ImgOut[z] = listePixelsTransform[z/3].r;
+            ImgOut[z+1] = listePixelsTransform[z/3].g;
+            ImgOut[z+2] = listePixelsTransform[z/3].b;
+        }
+        ecrire_image_ppm(("Complementary"+ to_string(i)+".ppm").data(),ImgOut,nH,nW);
+    }
+}
+
+void ComplementaryHarmonyQT(const Pixel &cdominant,char * filePath,double sizeBand){
+    OCTET *ImgOut,*ImgIn;
+    int nH,nW;
+    lire_nb_lignes_colonnes_image_ppm(filePath, &nH, &nW);
+    int nTaille = nH * nW;
+    int nTaille3 = nTaille *3;
+    allocation_tableau(ImgIn, OCTET, nTaille3);
+    allocation_tableau(ImgOut, OCTET, nTaille3);
+    lire_image_ppm(filePath, ImgIn, nH * nW);
+    vector<Pixel> listePixels;
+    for (int i=0; i < nTaille3; i+=3){Pixel p = {ImgIn[i],ImgIn[i+1],ImgIn[i+2]};listePixels.push_back(p);}
+    OCTET r = cdominant.r;OCTET g = cdominant.g;OCTET b = cdominant.b;
+    double hB,sB,lB,hC;
+    RGBtoHSL(r,g,b,hB,sB,lB);
+    addDegree(hB,hC,180);
+    std::vector<double> hList;
+    hList.emplace_back(hB);
+    hList.emplace_back(hC);
+    double influenceSize = (float)(360. / (double)hList.size());
+    double radius = influenceSize / 2.;
+    vector<Pixel> listePixelsTransform;
+    for (Pixel p:listePixels) {
+        double hP,sP,lP;
+        OCTET rP,gP,bP;
+        RGBtoHSL(p.r,p.g,p.b,hP,sP,lP);
+        std::vector<double> vectorDistance = distanceMin(hList,hP);
+        double distance = vectorDistance[1];
+        double Color_Out = (distance / radius) * (sizeBand / 2) + vectorDistance[0];
+        HSLtoRGB((float)Color_Out,(float)sP,(float)lP,rP,gP,bP);
+        Pixel pT = {rP,gP,bP};
+        listePixelsTransform.emplace_back(pT);
+    }
+    for (int z=0; z < nTaille3; z+=3)
+    {
+        ImgOut[z] = listePixelsTransform[z/3].r;
+        ImgOut[z+1] = listePixelsTransform[z/3].g;
+        ImgOut[z+2] = listePixelsTransform[z/3].b;
+    }
+    ecrire_image_ppm("/tmp/Image_Transform.ppm",ImgOut,nH,nW);
+}
+
+
+void AnalogueHarmony(const std::vector<Pixel> &pdominant,const std::vector<Pixel>& listePixels,int nH,int nW,double sizeBand){
+    OCTET *ImgOut;
+    int nTaille = nH * nW;
+    int nTaille3 = nTaille * 3;
+    for (int i = 0; i < pdominant.size(); ++i) {
+        allocation_tableau(ImgOut, OCTET, nTaille3);
+        OCTET r = pdominant[i].r;OCTET g = pdominant[i].g;OCTET b = pdominant[i].b;
+        double hB,sB,lB;
+        RGBtoHSL(r,g,b,hB,sB,lB);
+        std::vector<double> hList;
+        hList.emplace_back(hB);
+        double influenceSize = (float)(360. / (double)hList.size());
+        double radius = influenceSize / 2.;
+        vector<Pixel> listePixelsTransform;
+        for (Pixel p:listePixels) {
+            double hP,sP,lP;
+            OCTET rP,gP,bP;
+            RGBtoHSL(p.r,p.g,p.b,hP,sP,lP);
+            std::vector<double> vectorDistance = distanceMin(hList,hP);
+            double distance = vectorDistance[1];
+            double Color_Out = (distance / radius) * (sizeBand / 2) + vectorDistance[0];
+            HSLtoRGB((float)Color_Out,(float)sP,(float)lP,rP,gP,bP);
+            Pixel pT = {rP,gP,bP};
+            listePixelsTransform.emplace_back(pT);
+        }
+        for (int z=0; z < nTaille3; z+=3)
+        {
+            ImgOut[z] = listePixelsTransform[z/3].r;
+            ImgOut[z+1] = listePixelsTransform[z/3].g;
+            ImgOut[z+2] = listePixelsTransform[z/3].b;
+        }
+        ecrire_image_ppm(("Analogue"+ to_string(i)+".ppm").data(),ImgOut,nH,nW);
+    }
+}
+
+void AnalogueHarmonyQT(const Pixel &cdominant,char * filePath,double sizeBand){
+    OCTET *ImgOut,*ImgIn;
+    int nH,nW;
+    lire_nb_lignes_colonnes_image_ppm(filePath, &nH, &nW);
+    int nTaille = nH * nW;
+    int nTaille3 = nTaille *3;
+    allocation_tableau(ImgIn, OCTET, nTaille3);
+    allocation_tableau(ImgOut, OCTET, nTaille3);
+    lire_image_ppm(filePath, ImgIn, nH * nW);
+    vector<Pixel> listePixels;
+    for (int i=0; i < nTaille3; i+=3){Pixel p = {ImgIn[i],ImgIn[i+1],ImgIn[i+2]};listePixels.push_back(p);}
+    OCTET r = cdominant.r;OCTET g = cdominant.g;OCTET b = cdominant.b;
+    double hB,sB,lB;
+    RGBtoHSL(r,g,b,hB,sB,lB);
+    std::vector<double> hList;
+    hList.emplace_back(hB);
+    double influenceSize = (float)(360. / (double)hList.size());
+    double radius = influenceSize / 2.;
+    vector<Pixel> listePixelsTransform;
+    for (Pixel p:listePixels) {
+        double hP,sP,lP;
+        OCTET rP,gP,bP;
+        RGBtoHSL(p.r,p.g,p.b,hP,sP,lP);
+        std::vector<double> vectorDistance = distanceMin(hList,hP);
+        double distance = vectorDistance[1];
+        double Color_Out = (distance / radius) * (sizeBand / 2) + vectorDistance[0];
+        HSLtoRGB((float)Color_Out,(float)sP,(float)lP,rP,gP,bP);
+        Pixel pT = {rP,gP,bP};
+        listePixelsTransform.emplace_back(pT);
+    }
+    for (int z=0; z < nTaille3; z+=3)
+    {
+        ImgOut[z] = listePixelsTransform[z/3].r;
+        ImgOut[z+1] = listePixelsTransform[z/3].g;
+        ImgOut[z+2] = listePixelsTransform[z/3].b;
+    }
+    ecrire_image_ppm("/tmp/Image_Transform.ppm",ImgOut,nH,nW);
+}
+
+
+void TriadiqueHarmony(const std::vector<Pixel> &pdominant,const std::vector<Pixel>& listePixels,int nH,int nW,double sizeBand){
+    OCTET *ImgOut;
+    int nTaille = nH * nW;
+    int nTaille3 = nTaille * 3;
+    for (int i = 0; i < pdominant.size(); ++i) {
+        allocation_tableau(ImgOut, OCTET, nTaille3);
+        OCTET r = pdominant[i].r;OCTET g = pdominant[i].g;OCTET b = pdominant[i].b;
+        double hB,sB,lB,hT1,hT2;
+        RGBtoHSL(r,g,b,hB,sB,lB);
+        addDegree(hB,hT1,120);
+        addDegree(hB,hT2,240);
+        std::vector<double> hList;
+        hList.emplace_back(hB);
+        hList.emplace_back(hT1);
+        hList.emplace_back(hT2);
+        double influenceSize = (float)(360. / (double)hList.size());
+        double radius = influenceSize / 2.;
+        vector<Pixel> listePixelsTransform;
+        for (Pixel p:listePixels) {
+            double hP,sP,lP;
+            OCTET rP,gP,bP;
+            RGBtoHSL(p.r,p.g,p.b,hP,sP,lP);
+            std::vector<double> vectorDistance = distanceMin(hList,hP);
+            double distance = vectorDistance[1];
+            double Color_Out = (distance / radius) * (sizeBand / 2) + vectorDistance[0];
+            HSLtoRGB((float)Color_Out,(float)sP,(float)lP,rP,gP,bP);
+            Pixel pT = {rP,gP,bP};
+            listePixelsTransform.emplace_back(pT);
+        }
+        for (int z=0; z < nTaille3; z+=3)
+        {
+            ImgOut[z] = listePixelsTransform[z/3].r;
+            ImgOut[z+1] = listePixelsTransform[z/3].g;
+            ImgOut[z+2] = listePixelsTransform[z/3].b;
+        }
+        ecrire_image_ppm(("Triadique"+ to_string(i)+".ppm").data(),ImgOut,nH,nW);
+    }
+}
+
+void TriadiqueHarmonyQT(const Pixel &cdominant,char * filePath,double sizeBand){
+    OCTET *ImgOut,*ImgIn;
+    int nH,nW;
+    lire_nb_lignes_colonnes_image_ppm(filePath, &nH, &nW);
+    int nTaille = nH * nW;
+    int nTaille3 = nTaille *3;
+    allocation_tableau(ImgIn, OCTET, nTaille3);
+    allocation_tableau(ImgOut, OCTET, nTaille3);
+    lire_image_ppm(filePath, ImgIn, nH * nW);
+    vector<Pixel> listePixels;
+    for (int i=0; i < nTaille3; i+=3){Pixel p = {ImgIn[i],ImgIn[i+1],ImgIn[i+2]};listePixels.push_back(p);}
+    OCTET r = cdominant.r;OCTET g = cdominant.g;OCTET b = cdominant.b;
+    double hB,sB,lB,hT1,hT2;
+    RGBtoHSL(r,g,b,hB,sB,lB);
+    addDegree(hB,hT1,120);
+    addDegree(hB,hT2,240);
+    std::vector<double> hList;
+    hList.emplace_back(hB);
+    hList.emplace_back(hT1);
+    hList.emplace_back(hT2);
+    double influenceSize = (float)(360. / (double)hList.size());
+    double radius = influenceSize / 2.;
+    vector<Pixel> listePixelsTransform;
+    for (Pixel p:listePixels) {
+        double hP,sP,lP;
+        OCTET rP,gP,bP;
+        RGBtoHSL(p.r,p.g,p.b,hP,sP,lP);
+        std::vector<double> vectorDistance = distanceMin(hList,hP);
+        double distance = vectorDistance[1];
+        double Color_Out = (distance / radius) * (sizeBand / 2) + vectorDistance[0];
+        HSLtoRGB((float)Color_Out,(float)sP,(float)lP,rP,gP,bP);
+        Pixel pT = {rP,gP,bP};
+        listePixelsTransform.emplace_back(pT);
+    }
+    for (int z=0; z < nTaille3; z+=3)
+    {
+        ImgOut[z] = listePixelsTransform[z/3].r;
+        ImgOut[z+1] = listePixelsTransform[z/3].g;
+        ImgOut[z+2] = listePixelsTransform[z/3].b;
+    }
+    ecrire_image_ppm("/tmp/Image_Transform.ppm",ImgOut,nH,nW);
+}
+
+void SquareHarmony(const std::vector<Pixel> &pdominant,const std::vector<Pixel>& listePixels,int nH,int nW,double sizeBand){
+    OCTET *ImgOut;
+    int nTaille = nH * nW;
+    int nTaille3 = nTaille * 3;
+    for (int i = 0; i < pdominant.size(); ++i) {
+        allocation_tableau(ImgOut, OCTET, nTaille3);
+        OCTET r = pdominant[i].r;OCTET g = pdominant[i].g;OCTET b = pdominant[i].b;
+        double hB,sB,lB,hS1,hS2,hS3;
+        RGBtoHSL(r,g,b,hB,sB,lB);
+        addDegree(hB,hS1,90);
+        addDegree(hB,hS2,180);
+        addDegree(hB,hS3,270);
+        std::vector<double> hList;
+        hList.emplace_back(hB);
+        hList.emplace_back(hS1);
+        hList.emplace_back(hS2);
+        hList.emplace_back(hS3);
+        double influenceSize = (float)(360. / (double)hList.size());
+        double radius = influenceSize / 2.;
+        vector<Pixel> listePixelsTransform;
+        for (Pixel p:listePixels) {
+            double hP,sP,lP;
+            OCTET rP,gP,bP;
+            RGBtoHSL(p.r,p.g,p.b,hP,sP,lP);
+            std::vector<double> vectorDistance = distanceMin(hList,hP);
+            double distance = vectorDistance[1];
+            double Color_Out = (distance / radius) * (sizeBand / 2) + vectorDistance[0];
+            HSLtoRGB((float)Color_Out,(float)sP,(float)lP,rP,gP,bP);
+            Pixel pT = {rP,gP,bP};
+            listePixelsTransform.emplace_back(pT);
+        }
+        for (int z=0; z < nTaille3; z+=3)
+        {
+            ImgOut[z] = listePixelsTransform[z/3].r;
+            ImgOut[z+1] = listePixelsTransform[z/3].g;
+            ImgOut[z+2] = listePixelsTransform[z/3].b;
+        }
+        ecrire_image_ppm(("Square"+ to_string(i)+".ppm").data(),ImgOut,nH,nW);
+    }
+}
+
+void SquareHarmonyQT(const Pixel &cdominant,char * filePath,double sizeBand){
+    OCTET *ImgOut,*ImgIn;
+    int nH,nW;
+    lire_nb_lignes_colonnes_image_ppm(filePath, &nH, &nW);
+    int nTaille = nH * nW;
+    int nTaille3 = nTaille *3;
+    allocation_tableau(ImgIn, OCTET, nTaille3);
+    allocation_tableau(ImgOut, OCTET, nTaille3);
+    lire_image_ppm(filePath, ImgIn, nH * nW);
+    vector<Pixel> listePixels;
+    for (int i=0; i < nTaille3; i+=3){Pixel p = {ImgIn[i],ImgIn[i+1],ImgIn[i+2]};listePixels.push_back(p);}
+    OCTET r = cdominant.r;OCTET g = cdominant.g;OCTET b = cdominant.b;
+    double hB,sB,lB,hS1,hS2,hS3;
+    RGBtoHSL(r,g,b,hB,sB,lB);
+    addDegree(hB,hS1,90);
+    addDegree(hB,hS2,180);
+    addDegree(hB,hS3,270);
+    std::vector<double> hList;
+    hList.emplace_back(hB);
+    hList.emplace_back(hS1);
+    hList.emplace_back(hS2);
+    hList.emplace_back(hS3);
+    double influenceSize = (float)(360. / (double)hList.size());
+    double radius = influenceSize / 2.;
+    vector<Pixel> listePixelsTransform;
+    for (Pixel p:listePixels) {
+        double hP,sP,lP;
+        OCTET rP,gP,bP;
+        RGBtoHSL(p.r,p.g,p.b,hP,sP,lP);
+        std::vector<double> vectorDistance = distanceMin(hList,hP);
+        double distance = vectorDistance[1];
+        double Color_Out = (distance / radius) * (sizeBand / 2) + vectorDistance[0];
+        HSLtoRGB((float)Color_Out,(float)sP,(float)lP,rP,gP,bP);
+        Pixel pT = {rP,gP,bP};
+        listePixelsTransform.emplace_back(pT);
+    }
+    for (int z=0; z < nTaille3; z+=3)
+    {
+        ImgOut[z] = listePixelsTransform[z/3].r;
+        ImgOut[z+1] = listePixelsTransform[z/3].g;
+        ImgOut[z+2] = listePixelsTransform[z/3].b;
+    }
+    ecrire_image_ppm("/tmp/Image_Transform.ppm",ImgOut,nH,nW);
+}
 
 #endif //HARMONIEDESCOULEURS_PROJETIMAGE_HARMONY_H

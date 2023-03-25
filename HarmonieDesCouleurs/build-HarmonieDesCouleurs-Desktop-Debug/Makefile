@@ -52,12 +52,16 @@ OBJECTS_DIR   = ./
 
 ####### Files
 
-SOURCES       = ../HarmonieDesCouleurs/main.cpp \
+SOURCES       = ../HarmonieDesCouleurs/fancyslider.cpp \
+		../HarmonieDesCouleurs/main.cpp \
 		../HarmonieDesCouleurs/harmoniedescouleurs.cpp qrc_qmake_qmake_qm_files.cpp \
+		moc_fancyslider.cpp \
 		moc_harmoniedescouleurs.cpp
-OBJECTS       = main.o \
+OBJECTS       = fancyslider.o \
+		main.o \
 		harmoniedescouleurs.o \
 		qrc_qmake_qmake_qm_files.o \
+		moc_fancyslider.o \
 		moc_harmoniedescouleurs.o
 DIST          = /usr/lib/x86_64-linux-gnu/qt6/mkspecs/features/spec_pre.prf \
 		/usr/lib/x86_64-linux-gnu/qt6/mkspecs/common/unix.conf \
@@ -198,6 +202,7 @@ DIST          = /usr/lib/x86_64-linux-gnu/qt6/mkspecs/features/spec_pre.prf \
 		/usr/lib/x86_64-linux-gnu/qt6/mkspecs/features/qt_config.prf \
 		/usr/lib/x86_64-linux-gnu/qt6/mkspecs/linux-g++/qmake.conf \
 		/usr/lib/x86_64-linux-gnu/qt6/mkspecs/features/spec_post.prf \
+		../HarmonieDesCouleurs/.qmake.stash \
 		/usr/lib/x86_64-linux-gnu/qt6/mkspecs/features/exclusive_builds.prf \
 		/usr/lib/x86_64-linux-gnu/qt6/mkspecs/features/toolchain.prf \
 		/usr/lib/x86_64-linux-gnu/qt6/mkspecs/features/default_pre.prf \
@@ -219,7 +224,9 @@ DIST          = /usr/lib/x86_64-linux-gnu/qt6/mkspecs/features/spec_pre.prf \
 		/usr/lib/x86_64-linux-gnu/qt6/mkspecs/features/exceptions.prf \
 		/usr/lib/x86_64-linux-gnu/qt6/mkspecs/features/yacc.prf \
 		/usr/lib/x86_64-linux-gnu/qt6/mkspecs/features/lex.prf \
-		../HarmonieDesCouleurs/HarmonieDesCouleurs.pro ../HarmonieDesCouleurs/harmoniedescouleurs.h ../HarmonieDesCouleurs/main.cpp \
+		../HarmonieDesCouleurs/HarmonieDesCouleurs.pro ../HarmonieDesCouleurs/fancyslider.h \
+		../HarmonieDesCouleurs/harmoniedescouleurs.h ../HarmonieDesCouleurs/fancyslider.cpp \
+		../HarmonieDesCouleurs/main.cpp \
 		../HarmonieDesCouleurs/harmoniedescouleurs.cpp
 QMAKE_TARGET  = HarmonieDesCouleurs
 DESTDIR       = 
@@ -371,6 +378,7 @@ Makefile: ../HarmonieDesCouleurs/HarmonieDesCouleurs.pro /usr/lib/x86_64-linux-g
 		/usr/lib/x86_64-linux-gnu/qt6/mkspecs/features/qt_config.prf \
 		/usr/lib/x86_64-linux-gnu/qt6/mkspecs/linux-g++/qmake.conf \
 		/usr/lib/x86_64-linux-gnu/qt6/mkspecs/features/spec_post.prf \
+		.qmake.stash \
 		/usr/lib/x86_64-linux-gnu/qt6/mkspecs/features/exclusive_builds.prf \
 		/usr/lib/x86_64-linux-gnu/qt6/mkspecs/features/toolchain.prf \
 		/usr/lib/x86_64-linux-gnu/qt6/mkspecs/features/default_pre.prf \
@@ -537,6 +545,7 @@ Makefile: ../HarmonieDesCouleurs/HarmonieDesCouleurs.pro /usr/lib/x86_64-linux-g
 /usr/lib/x86_64-linux-gnu/qt6/mkspecs/features/qt_config.prf:
 /usr/lib/x86_64-linux-gnu/qt6/mkspecs/linux-g++/qmake.conf:
 /usr/lib/x86_64-linux-gnu/qt6/mkspecs/features/spec_post.prf:
+.qmake.stash:
 /usr/lib/x86_64-linux-gnu/qt6/mkspecs/features/exclusive_builds.prf:
 /usr/lib/x86_64-linux-gnu/qt6/mkspecs/features/toolchain.prf:
 /usr/lib/x86_64-linux-gnu/qt6/mkspecs/features/default_pre.prf:
@@ -580,8 +589,8 @@ distdir: FORCE
 	$(COPY_FILE) --parents ../HarmonieDesCouleurs/HarmonieDesCouleurs_fr_FR.ts $(DISTDIR)/
 	$(COPY_FILE) --parents qmake_qmake_qm_files.qrc $(DISTDIR)/
 	$(COPY_FILE) --parents /usr/lib/x86_64-linux-gnu/qt6/mkspecs/features/data/dummy.cpp $(DISTDIR)/
-	$(COPY_FILE) --parents ../HarmonieDesCouleurs/harmoniedescouleurs.h $(DISTDIR)/
-	$(COPY_FILE) --parents ../HarmonieDesCouleurs/main.cpp ../HarmonieDesCouleurs/harmoniedescouleurs.cpp $(DISTDIR)/
+	$(COPY_FILE) --parents ../HarmonieDesCouleurs/fancyslider.h ../HarmonieDesCouleurs/harmoniedescouleurs.h $(DISTDIR)/
+	$(COPY_FILE) --parents ../HarmonieDesCouleurs/fancyslider.cpp ../HarmonieDesCouleurs/main.cpp ../HarmonieDesCouleurs/harmoniedescouleurs.cpp $(DISTDIR)/
 	$(COPY_FILE) --parents ../HarmonieDesCouleurs/harmoniedescouleurs.ui $(DISTDIR)/
 	$(COPY_FILE) --parents ../HarmonieDesCouleurs/HarmonieDesCouleurs_fr_FR.ts $(DISTDIR)/
 
@@ -627,9 +636,14 @@ compiler_moc_predefs_clean:
 moc_predefs.h: /usr/lib/x86_64-linux-gnu/qt6/mkspecs/features/data/dummy.cpp
 	g++ -pipe -g -Wall -Wextra -dM -E -o moc_predefs.h /usr/lib/x86_64-linux-gnu/qt6/mkspecs/features/data/dummy.cpp
 
-compiler_moc_header_make_all: moc_harmoniedescouleurs.cpp
+compiler_moc_header_make_all: moc_fancyslider.cpp moc_harmoniedescouleurs.cpp
 compiler_moc_header_clean:
-	-$(DEL_FILE) moc_harmoniedescouleurs.cpp
+	-$(DEL_FILE) moc_fancyslider.cpp moc_harmoniedescouleurs.cpp
+moc_fancyslider.cpp: ../HarmonieDesCouleurs/fancyslider.h \
+		moc_predefs.h \
+		/usr/lib/qt6/libexec/moc
+	/usr/lib/qt6/libexec/moc $(DEFINES) --include /home/christina/Documents/QT/HarmonieDesCouleurs/build-HarmonieDesCouleurs-Desktop-Debug/moc_predefs.h -I/usr/lib/x86_64-linux-gnu/qt6/mkspecs/linux-g++ -I/home/christina/Documents/QT/HarmonieDesCouleurs/HarmonieDesCouleurs -I/usr/include/x86_64-linux-gnu/qt6 -I/usr/include/x86_64-linux-gnu/qt6/QtWidgets -I/usr/include/x86_64-linux-gnu/qt6/QtGui -I/usr/include/x86_64-linux-gnu/qt6/QtCore -I. -I/usr/include/c++/11 -I/usr/include/x86_64-linux-gnu/c++/11 -I/usr/include/c++/11/backward -I/usr/lib/gcc/x86_64-linux-gnu/11/include -I/usr/local/include -I/usr/include/x86_64-linux-gnu -I/usr/include ../HarmonieDesCouleurs/fancyslider.h -o moc_fancyslider.cpp
+
 moc_harmoniedescouleurs.cpp: ../HarmonieDesCouleurs/harmoniedescouleurs.h \
 		moc_predefs.h \
 		/usr/lib/qt6/libexec/moc
@@ -656,15 +670,24 @@ compiler_clean: compiler_lrelease_clean compiler_rcc_clean compiler_moc_predefs_
 
 ####### Compile
 
+fancyslider.o: ../HarmonieDesCouleurs/fancyslider.cpp ../HarmonieDesCouleurs/fancyslider.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o fancyslider.o ../HarmonieDesCouleurs/fancyslider.cpp
+
 main.o: ../HarmonieDesCouleurs/main.cpp ../HarmonieDesCouleurs/harmoniedescouleurs.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o main.o ../HarmonieDesCouleurs/main.cpp
 
 harmoniedescouleurs.o: ../HarmonieDesCouleurs/harmoniedescouleurs.cpp ../HarmonieDesCouleurs/harmoniedescouleurs.h \
-		ui_harmoniedescouleurs.h
+		../HarmonieDesCouleurs/harmony.h \
+		../HarmonieDesCouleurs/image_ppm.h \
+		ui_harmoniedescouleurs.h \
+		../HarmonieDesCouleurs/couleursDominantes.cpp
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o harmoniedescouleurs.o ../HarmonieDesCouleurs/harmoniedescouleurs.cpp
 
 qrc_qmake_qmake_qm_files.o: qrc_qmake_qmake_qm_files.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o qrc_qmake_qmake_qm_files.o qrc_qmake_qmake_qm_files.cpp
+
+moc_fancyslider.o: moc_fancyslider.cpp 
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_fancyslider.o moc_fancyslider.cpp
 
 moc_harmoniedescouleurs.o: moc_harmoniedescouleurs.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_harmoniedescouleurs.o moc_harmoniedescouleurs.cpp

@@ -160,11 +160,14 @@ font: 11pt &quot;Sawasdee&quot;;
       <height>30</height>
      </rect>
     </property>
+    <property name="cursor">
+     <cursorShape>ArrowCursor</cursorShape>
+    </property>
     <property name="styleSheet">
      <string notr="true">font: 11pt &quot;Sawasdee&quot;;</string>
     </property>
     <property name="text">
-     <string>Sélectionner une couleur</string>
+     <string>Choix couleur sur la palette</string>
     </property>
    </widget>
    <widget class="QLabel" name="background">
@@ -398,6 +401,9 @@ background-position: center;</string>
     </property>
    </widget>
    <widget class="QPushButton" name="d_color_1">
+    <property name="enabled">
+     <bool>true</bool>
+    </property>
     <property name="geometry">
      <rect>
       <x>120</x>
@@ -452,6 +458,188 @@ background-position: center;</string>
      <string/>
     </property>
    </widget>
+   <widget class="QPushButton" name="GenererImgFinal">
+    <property name="geometry">
+     <rect>
+      <x>660</x>
+      <y>423</y>
+      <width>200</width>
+      <height>30</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">font: 11pt &quot;Sawasdee&quot;;</string>
+    </property>
+    <property name="text">
+     <string>Générer image</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="colorChosenUI">
+    <property name="geometry">
+     <rect>
+      <x>440</x>
+      <y>410</y>
+      <width>80</width>
+      <height>80</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QWidget" name="verticalLayoutWidget">
+    <property name="geometry">
+     <rect>
+      <x>380</x>
+      <y>100</y>
+      <width>201</width>
+      <height>263</height>
+     </rect>
+    </property>
+    <layout class="QVBoxLayout" name="choixHarmonieLayout">
+     <item>
+      <widget class="QLabel" name="radioB__Text">
+       <property name="styleSheet">
+        <string notr="true">font: 11pt &quot;Sawasdee&quot;;</string>
+       </property>
+       <property name="text">
+        <string>Choix de l'harmonie :</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QRadioButton" name="radioB_Analogue">
+       <property name="enabled">
+        <bool>true</bool>
+       </property>
+       <property name="cursor">
+        <cursorShape>PointingHandCursor</cursorShape>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">font: 11pt &quot;Sawasdee&quot;;</string>
+       </property>
+       <property name="text">
+        <string>Analogue</string>
+       </property>
+       <property name="checked">
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QRadioButton" name="radioB_Complementaire">
+       <property name="cursor">
+        <cursorShape>PointingHandCursor</cursorShape>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">font: 11pt &quot;Sawasdee&quot;;</string>
+       </property>
+       <property name="text">
+        <string>Complementaire</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QRadioButton" name="radioB_Triadique">
+       <property name="cursor">
+        <cursorShape>PointingHandCursor</cursorShape>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">font: 11pt &quot;Sawasdee&quot;;</string>
+       </property>
+       <property name="text">
+        <string>Triadique</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QRadioButton" name="radioB_Quadratique">
+       <property name="cursor">
+        <cursorShape>PointingHandCursor</cursorShape>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">font: 11pt &quot;Sawasdee&quot;;</string>
+       </property>
+       <property name="text">
+        <string>Quadratique</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="radioB__Text_2">
+       <property name="styleSheet">
+        <string notr="true">font: 11pt &quot;Sawasdee&quot;;</string>
+       </property>
+       <property name="text">
+        <string>Largeur de la bande :</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="valeurSlider">
+       <property name="styleSheet">
+        <string notr="true">font: oblique 11pt &quot;Sawasdee&quot;;</string>
+       </property>
+       <property name="text">
+        <string>(sélectionner une valeur)</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignCenter</set>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QSlider" name="horizontalSlider">
+       <property name="minimum">
+        <number>1</number>
+       </property>
+       <property name="maximum">
+        <number>359</number>
+       </property>
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="tickPosition">
+        <enum>QSlider::TicksAbove</enum>
+       </property>
+       <property name="tickInterval">
+        <number>10</number>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </widget>
+   <widget class="QPushButton" name="Save_image">
+    <property name="enabled">
+     <bool>true</bool>
+    </property>
+    <property name="geometry">
+     <rect>
+      <x>660</x>
+      <y>456</y>
+      <width>200</width>
+      <height>30</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">font: 11pt &quot;Sawasdee&quot;;</string>
+    </property>
+    <property name="text">
+     <string>Sauvegarder l'image</string>
+    </property>
+    <property name="checkable">
+     <bool>false</bool>
+    </property>
+    <property name="autoDefault">
+     <bool>false</bool>
+    </property>
+    <property name="default">
+     <bool>false</bool>
+    </property>
+    <property name="flat">
+     <bool>false</bool>
+    </property>
+   </widget>
    <zorder>background</zorder>
    <zorder>horizontalLayoutWidget</zorder>
    <zorder>colorSelector</zorder>
@@ -462,6 +650,10 @@ background-position: center;</string>
    <zorder>d_color_2</zorder>
    <zorder>d_color_3</zorder>
    <zorder>d_color_4</zorder>
+   <zorder>GenererImgFinal</zorder>
+   <zorder>colorChosenUI</zorder>
+   <zorder>verticalLayoutWidget</zorder>
+   <zorder>Save_image</zorder>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
@@ -481,7 +673,14 @@ background-position: center;</string>
    </widget>
    <addaction name="menuMenu"/>
   </widget>
-  <widget class="QStatusBar" name="statusbar"/>
+  <widget class="QStatusBar" name="statusbar">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="sizeGripEnabled">
+    <bool>false</bool>
+   </property>
+  </widget>
   <action name="actionCredits">
    <property name="text">
     <string>Crédits</string>
