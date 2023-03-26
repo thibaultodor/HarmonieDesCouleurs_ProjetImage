@@ -19,8 +19,11 @@
 #include <QtWidgets/QMenu>
 #include <QtWidgets/QMenuBar>
 #include <QtWidgets/QPushButton>
+#include <QtWidgets/QRadioButton>
+#include <QtWidgets/QSlider>
 #include <QtWidgets/QSpacerItem>
 #include <QtWidgets/QStatusBar>
+#include <QtWidgets/QVBoxLayout>
 #include <QtWidgets/QWidget>
 
 QT_BEGIN_NAMESPACE
@@ -52,6 +55,19 @@ public:
     QPushButton *d_color_2;
     QPushButton *d_color_3;
     QPushButton *d_color_4;
+    QPushButton *GenererImgFinal;
+    QPushButton *colorChosenUI;
+    QWidget *verticalLayoutWidget;
+    QVBoxLayout *choixHarmonieLayout;
+    QLabel *radioB__Text;
+    QRadioButton *radioB_Analogue;
+    QRadioButton *radioB_Complementaire;
+    QRadioButton *radioB_Triadique;
+    QRadioButton *radioB_Quadratique;
+    QLabel *radioB__Text_2;
+    QLabel *valeurSlider;
+    QSlider *horizontalSlider;
+    QPushButton *Save_image;
     QMenuBar *menubar;
     QMenu *menuMenu;
     QStatusBar *statusbar;
@@ -119,6 +135,7 @@ public:
         colorSelector = new QPushButton(centralwidget);
         colorSelector->setObjectName(QString::fromUtf8("colorSelector"));
         colorSelector->setGeometry(QRect(380, 60, 200, 30));
+        colorSelector->setCursor(QCursor(Qt::ArrowCursor));
         colorSelector->setStyleSheet(QString::fromUtf8("font: 11pt \"Sawasdee\";"));
         background = new QLabel(centralwidget);
         background->setObjectName(QString::fromUtf8("background"));
@@ -192,6 +209,7 @@ public:
         dom_colors->setStyleSheet(QString::fromUtf8("font: 11pt \"Sawasdee\";"));
         d_color_1 = new QPushButton(centralwidget);
         d_color_1->setObjectName(QString::fromUtf8("d_color_1"));
+        d_color_1->setEnabled(true);
         d_color_1->setGeometry(QRect(120, 455, 40, 40));
         d_color_1->setCheckable(false);
         d_color_2 = new QPushButton(centralwidget);
@@ -203,6 +221,86 @@ public:
         d_color_4 = new QPushButton(centralwidget);
         d_color_4->setObjectName(QString::fromUtf8("d_color_4"));
         d_color_4->setGeometry(QRect(240, 455, 40, 40));
+        GenererImgFinal = new QPushButton(centralwidget);
+        GenererImgFinal->setObjectName(QString::fromUtf8("GenererImgFinal"));
+        GenererImgFinal->setGeometry(QRect(660, 423, 200, 30));
+        GenererImgFinal->setStyleSheet(QString::fromUtf8("font: 11pt \"Sawasdee\";"));
+        colorChosenUI = new QPushButton(centralwidget);
+        colorChosenUI->setObjectName(QString::fromUtf8("colorChosenUI"));
+        colorChosenUI->setGeometry(QRect(440, 410, 80, 80));
+        verticalLayoutWidget = new QWidget(centralwidget);
+        verticalLayoutWidget->setObjectName(QString::fromUtf8("verticalLayoutWidget"));
+        verticalLayoutWidget->setGeometry(QRect(380, 100, 201, 263));
+        choixHarmonieLayout = new QVBoxLayout(verticalLayoutWidget);
+        choixHarmonieLayout->setObjectName(QString::fromUtf8("choixHarmonieLayout"));
+        choixHarmonieLayout->setContentsMargins(0, 0, 0, 0);
+        radioB__Text = new QLabel(verticalLayoutWidget);
+        radioB__Text->setObjectName(QString::fromUtf8("radioB__Text"));
+        radioB__Text->setStyleSheet(QString::fromUtf8("font: 11pt \"Sawasdee\";"));
+
+        choixHarmonieLayout->addWidget(radioB__Text);
+
+        radioB_Analogue = new QRadioButton(verticalLayoutWidget);
+        radioB_Analogue->setObjectName(QString::fromUtf8("radioB_Analogue"));
+        radioB_Analogue->setEnabled(true);
+        radioB_Analogue->setCursor(QCursor(Qt::PointingHandCursor));
+        radioB_Analogue->setStyleSheet(QString::fromUtf8("font: 11pt \"Sawasdee\";"));
+        radioB_Analogue->setChecked(true);
+
+        choixHarmonieLayout->addWidget(radioB_Analogue);
+
+        radioB_Complementaire = new QRadioButton(verticalLayoutWidget);
+        radioB_Complementaire->setObjectName(QString::fromUtf8("radioB_Complementaire"));
+        radioB_Complementaire->setCursor(QCursor(Qt::PointingHandCursor));
+        radioB_Complementaire->setStyleSheet(QString::fromUtf8("font: 11pt \"Sawasdee\";"));
+
+        choixHarmonieLayout->addWidget(radioB_Complementaire);
+
+        radioB_Triadique = new QRadioButton(verticalLayoutWidget);
+        radioB_Triadique->setObjectName(QString::fromUtf8("radioB_Triadique"));
+        radioB_Triadique->setCursor(QCursor(Qt::PointingHandCursor));
+        radioB_Triadique->setStyleSheet(QString::fromUtf8("font: 11pt \"Sawasdee\";"));
+
+        choixHarmonieLayout->addWidget(radioB_Triadique);
+
+        radioB_Quadratique = new QRadioButton(verticalLayoutWidget);
+        radioB_Quadratique->setObjectName(QString::fromUtf8("radioB_Quadratique"));
+        radioB_Quadratique->setCursor(QCursor(Qt::PointingHandCursor));
+        radioB_Quadratique->setStyleSheet(QString::fromUtf8("font: 11pt \"Sawasdee\";"));
+
+        choixHarmonieLayout->addWidget(radioB_Quadratique);
+
+        radioB__Text_2 = new QLabel(verticalLayoutWidget);
+        radioB__Text_2->setObjectName(QString::fromUtf8("radioB__Text_2"));
+        radioB__Text_2->setStyleSheet(QString::fromUtf8("font: 11pt \"Sawasdee\";"));
+
+        choixHarmonieLayout->addWidget(radioB__Text_2);
+
+        valeurSlider = new QLabel(verticalLayoutWidget);
+        valeurSlider->setObjectName(QString::fromUtf8("valeurSlider"));
+        valeurSlider->setStyleSheet(QString::fromUtf8("font: oblique 11pt \"Sawasdee\";"));
+        valeurSlider->setAlignment(Qt::AlignCenter);
+
+        choixHarmonieLayout->addWidget(valeurSlider);
+
+        horizontalSlider = new QSlider(verticalLayoutWidget);
+        horizontalSlider->setObjectName(QString::fromUtf8("horizontalSlider"));
+        horizontalSlider->setMinimum(1);
+        horizontalSlider->setMaximum(359);
+        horizontalSlider->setOrientation(Qt::Horizontal);
+        horizontalSlider->setTickPosition(QSlider::TicksAbove);
+        horizontalSlider->setTickInterval(10);
+
+        choixHarmonieLayout->addWidget(horizontalSlider);
+
+        Save_image = new QPushButton(centralwidget);
+        Save_image->setObjectName(QString::fromUtf8("Save_image"));
+        Save_image->setEnabled(true);
+        Save_image->setGeometry(QRect(660, 456, 200, 30));
+        Save_image->setStyleSheet(QString::fromUtf8("font: 11pt \"Sawasdee\";"));
+        Save_image->setCheckable(false);
+        Save_image->setAutoDefault(false);
+        Save_image->setFlat(false);
         HarmonieDesCouleurs->setCentralWidget(centralwidget);
         background->raise();
         horizontalLayoutWidget->raise();
@@ -214,6 +312,10 @@ public:
         d_color_2->raise();
         d_color_3->raise();
         d_color_4->raise();
+        GenererImgFinal->raise();
+        colorChosenUI->raise();
+        verticalLayoutWidget->raise();
+        Save_image->raise();
         menubar = new QMenuBar(HarmonieDesCouleurs);
         menubar->setObjectName(QString::fromUtf8("menubar"));
         menubar->setGeometry(QRect(0, 0, 960, 22));
@@ -222,6 +324,8 @@ public:
         HarmonieDesCouleurs->setMenuBar(menubar);
         statusbar = new QStatusBar(HarmonieDesCouleurs);
         statusbar->setObjectName(QString::fromUtf8("statusbar"));
+        statusbar->setEnabled(false);
+        statusbar->setSizeGripEnabled(false);
         HarmonieDesCouleurs->setStatusBar(statusbar);
 
         menubar->addAction(menuMenu->menuAction());
@@ -229,6 +333,9 @@ public:
         menuMenu->addAction(actionQuitter);
 
         retranslateUi(HarmonieDesCouleurs);
+
+        Save_image->setDefault(false);
+
 
         QMetaObject::connectSlotsByName(HarmonieDesCouleurs);
     } // setupUi
@@ -244,7 +351,7 @@ public:
         cheminParcourir->setText(QCoreApplication::translate("HarmonieDesCouleurs", "Chemin du fichier...", nullptr));
         Parcourir->setText(QCoreApplication::translate("HarmonieDesCouleurs", "Parcourir", nullptr));
         Supprimer->setText(QCoreApplication::translate("HarmonieDesCouleurs", "Supprimer", nullptr));
-        colorSelector->setText(QCoreApplication::translate("HarmonieDesCouleurs", "S\303\251lectionner une couleur", nullptr));
+        colorSelector->setText(QCoreApplication::translate("HarmonieDesCouleurs", "Choix couleur sur la palette", nullptr));
         background->setText(QString());
         init_image_label->setText(QCoreApplication::translate("HarmonieDesCouleurs", "Choisir une image...", nullptr));
         init_legende->setText(QCoreApplication::translate("HarmonieDesCouleurs", "Image Originale", nullptr));
@@ -255,6 +362,16 @@ public:
         d_color_2->setText(QString());
         d_color_3->setText(QString());
         d_color_4->setText(QString());
+        GenererImgFinal->setText(QCoreApplication::translate("HarmonieDesCouleurs", "G\303\251n\303\251rer image", nullptr));
+        colorChosenUI->setText(QString());
+        radioB__Text->setText(QCoreApplication::translate("HarmonieDesCouleurs", "Choix de l'harmonie :", nullptr));
+        radioB_Analogue->setText(QCoreApplication::translate("HarmonieDesCouleurs", "Analogue", nullptr));
+        radioB_Complementaire->setText(QCoreApplication::translate("HarmonieDesCouleurs", "Complementaire", nullptr));
+        radioB_Triadique->setText(QCoreApplication::translate("HarmonieDesCouleurs", "Triadique", nullptr));
+        radioB_Quadratique->setText(QCoreApplication::translate("HarmonieDesCouleurs", "Quadratique", nullptr));
+        radioB__Text_2->setText(QCoreApplication::translate("HarmonieDesCouleurs", "Largeur de la bande :", nullptr));
+        valeurSlider->setText(QCoreApplication::translate("HarmonieDesCouleurs", "(s\303\251lectionner une valeur)", nullptr));
+        Save_image->setText(QCoreApplication::translate("HarmonieDesCouleurs", "Sauvegarder l'image", nullptr));
         menuMenu->setTitle(QCoreApplication::translate("HarmonieDesCouleurs", "Menu", nullptr));
     } // retranslateUi
 
