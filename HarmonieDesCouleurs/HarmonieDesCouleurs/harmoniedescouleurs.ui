@@ -668,10 +668,22 @@ background-position: center;</string>
     <property name="title">
      <string>Menu</string>
     </property>
+    <addaction name="actionParcourir"/>
+    <addaction name="actionSupprimer"/>
+    <addaction name="separator"/>
     <addaction name="actionCredits"/>
+    <addaction name="separator"/>
     <addaction name="actionQuitter"/>
    </widget>
+   <widget class="QMenu" name="menuAide">
+    <property name="title">
+     <string>Aide</string>
+    </property>
+    <addaction name="actionColorimetrie"/>
+    <addaction name="actionAide_de_Harmonie_Des_Couleurs"/>
+   </widget>
    <addaction name="menuMenu"/>
+   <addaction name="menuAide"/>
   </widget>
   <widget class="QStatusBar" name="statusbar">
    <property name="enabled">
@@ -692,6 +704,31 @@ background-position: center;</string>
   <action name="actionQuitter">
    <property name="text">
     <string>Quitter</string>
+   </property>
+  </action>
+  <action name="actionAide_de_Harmonie_Des_Couleurs">
+   <property name="text">
+    <string>Aide sur Harmonie Des Couleurs</string>
+   </property>
+  </action>
+  <action name="actionParcourir">
+   <property name="text">
+    <string>Parcourir</string>
+   </property>
+  </action>
+  <action name="actionSupprimer">
+   <property name="text">
+    <string>Supprimer</string>
+   </property>
+  </action>
+  <action name="actionNouvelle_Fenetre">
+   <property name="text">
+    <string>Nouvelle Fenêtre</string>
+   </property>
+  </action>
+  <action name="actionColorimetrie">
+   <property name="text">
+    <string>Aide Colorimetrie</string>
    </property>
   </action>
  </widget>

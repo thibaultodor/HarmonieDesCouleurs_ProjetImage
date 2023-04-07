@@ -33,6 +33,11 @@ class Ui_HarmonieDesCouleurs
 public:
     QAction *actionCredits;
     QAction *actionQuitter;
+    QAction *actionAide_de_Harmonie_Des_Couleurs;
+    QAction *actionParcourir;
+    QAction *actionSupprimer;
+    QAction *actionNouvelle_Fenetre;
+    QAction *actionColorimetrie;
     QWidget *centralwidget;
     QWidget *horizontalLayoutWidget;
     QHBoxLayout *horizontalLayout_3;
@@ -70,6 +75,7 @@ public:
     QPushButton *Save_image;
     QMenuBar *menubar;
     QMenu *menuMenu;
+    QMenu *menuAide;
     QStatusBar *statusbar;
 
     void setupUi(QMainWindow *HarmonieDesCouleurs)
@@ -88,6 +94,16 @@ public:
         actionCredits->setObjectName(QString::fromUtf8("actionCredits"));
         actionQuitter = new QAction(HarmonieDesCouleurs);
         actionQuitter->setObjectName(QString::fromUtf8("actionQuitter"));
+        actionAide_de_Harmonie_Des_Couleurs = new QAction(HarmonieDesCouleurs);
+        actionAide_de_Harmonie_Des_Couleurs->setObjectName(QString::fromUtf8("actionAide_de_Harmonie_Des_Couleurs"));
+        actionParcourir = new QAction(HarmonieDesCouleurs);
+        actionParcourir->setObjectName(QString::fromUtf8("actionParcourir"));
+        actionSupprimer = new QAction(HarmonieDesCouleurs);
+        actionSupprimer->setObjectName(QString::fromUtf8("actionSupprimer"));
+        actionNouvelle_Fenetre = new QAction(HarmonieDesCouleurs);
+        actionNouvelle_Fenetre->setObjectName(QString::fromUtf8("actionNouvelle_Fenetre"));
+        actionColorimetrie = new QAction(HarmonieDesCouleurs);
+        actionColorimetrie->setObjectName(QString::fromUtf8("actionColorimetrie"));
         centralwidget = new QWidget(HarmonieDesCouleurs);
         centralwidget->setObjectName(QString::fromUtf8("centralwidget"));
         centralwidget->setStyleSheet(QString::fromUtf8(""));
@@ -321,6 +337,8 @@ public:
         menubar->setGeometry(QRect(0, 0, 960, 22));
         menuMenu = new QMenu(menubar);
         menuMenu->setObjectName(QString::fromUtf8("menuMenu"));
+        menuAide = new QMenu(menubar);
+        menuAide->setObjectName(QString::fromUtf8("menuAide"));
         HarmonieDesCouleurs->setMenuBar(menubar);
         statusbar = new QStatusBar(HarmonieDesCouleurs);
         statusbar->setObjectName(QString::fromUtf8("statusbar"));
@@ -329,8 +347,15 @@ public:
         HarmonieDesCouleurs->setStatusBar(statusbar);
 
         menubar->addAction(menuMenu->menuAction());
+        menubar->addAction(menuAide->menuAction());
+        menuMenu->addAction(actionParcourir);
+        menuMenu->addAction(actionSupprimer);
+        menuMenu->addSeparator();
         menuMenu->addAction(actionCredits);
+        menuMenu->addSeparator();
         menuMenu->addAction(actionQuitter);
+        menuAide->addAction(actionColorimetrie);
+        menuAide->addAction(actionAide_de_Harmonie_Des_Couleurs);
 
         retranslateUi(HarmonieDesCouleurs);
 
@@ -348,6 +373,11 @@ public:
         actionCredits->setToolTip(QCoreApplication::translate("HarmonieDesCouleurs", "Cr\303\251dits", nullptr));
 #endif // QT_CONFIG(tooltip)
         actionQuitter->setText(QCoreApplication::translate("HarmonieDesCouleurs", "Quitter", nullptr));
+        actionAide_de_Harmonie_Des_Couleurs->setText(QCoreApplication::translate("HarmonieDesCouleurs", "Aide sur Harmonie Des Couleurs", nullptr));
+        actionParcourir->setText(QCoreApplication::translate("HarmonieDesCouleurs", "Parcourir", nullptr));
+        actionSupprimer->setText(QCoreApplication::translate("HarmonieDesCouleurs", "Supprimer", nullptr));
+        actionNouvelle_Fenetre->setText(QCoreApplication::translate("HarmonieDesCouleurs", "Nouvelle Fen\303\252tre", nullptr));
+        actionColorimetrie->setText(QCoreApplication::translate("HarmonieDesCouleurs", "Aide Colorimetrie", nullptr));
         cheminParcourir->setText(QCoreApplication::translate("HarmonieDesCouleurs", "Chemin du fichier...", nullptr));
         Parcourir->setText(QCoreApplication::translate("HarmonieDesCouleurs", "Parcourir", nullptr));
         Supprimer->setText(QCoreApplication::translate("HarmonieDesCouleurs", "Supprimer", nullptr));
@@ -373,6 +403,7 @@ public:
         valeurSlider->setText(QCoreApplication::translate("HarmonieDesCouleurs", "(s\303\251lectionner une valeur)", nullptr));
         Save_image->setText(QCoreApplication::translate("HarmonieDesCouleurs", "Sauvegarder l'image", nullptr));
         menuMenu->setTitle(QCoreApplication::translate("HarmonieDesCouleurs", "Menu", nullptr));
+        menuAide->setTitle(QCoreApplication::translate("HarmonieDesCouleurs", "Aide", nullptr));
     } // retranslateUi
 
 };

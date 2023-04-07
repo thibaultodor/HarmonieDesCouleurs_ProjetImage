@@ -71,6 +71,295 @@ HarmonieDesCouleurs::~HarmonieDesCouleurs()
     delete ui;
 }
 
+/* MENU APP */
+void HarmonieDesCouleurs::on_actionParcourir_triggered(){
+    on_Parcourir_clicked();
+}
+
+void HarmonieDesCouleurs::on_actionSupprimer_triggered(){
+    on_Supprimer_clicked();
+}
+
+void HarmonieDesCouleurs::on_actionCredits_triggered() //Appui "menu > crédits"
+{
+    QDialog *creditsFenetre = new QDialog(this);
+    creditsFenetre->setWindowTitle("Crédits");
+    creditsFenetre->setFixedWidth(300);
+
+    QImage *creditsImage = new QImage("../HarmonieDesCouleurs/authors.png");
+    QImage creditsImageResized = creditsImage->scaledToWidth(64,Qt::SmoothTransformation);
+    QLabel* creditsLabel = new QLabel();
+    creditsLabel->setPixmap(QPixmap::fromImage(creditsImageResized));
+    creditsLabel->show();
+
+    QLabel *creditsTexte = new QLabel(creditsFenetre);
+    creditsTexte->setText("<br>Développée par :"
+                          "<p style='text-align: right;'>Christina MAURIN<br>Thibault ODOR</p>"
+                          "<center>M1 Imagine - 2023</center>"
+                          "<br>"
+                          "Basée sur Qt et C++<br>"
+                          "Crédits background : Vecteezy <br>"
+                          "Crédits icones : juicy_fish"
+                          "<br><br>"
+                          "Merci d'utiliser l'application !<br>");
+
+    QPushButton *creditsBouton = new QPushButton(creditsFenetre);
+    creditsBouton->setText("Fermer");
+    creditsBouton->setFixedSize(80,25);
+
+    QFont font("Sawasdee", 11);
+    creditsTexte->setFont(font);
+    creditsBouton->setFont(font);
+
+
+    QObject::connect(creditsBouton, &QPushButton::clicked, creditsFenetre, &QDialog::close);
+
+
+    QVBoxLayout *layout = new QVBoxLayout(creditsFenetre);
+    layout->addWidget(creditsLabel, 0, Qt::AlignCenter);
+    layout->addWidget(creditsTexte);
+    layout->addWidget(creditsBouton, 0, Qt::AlignCenter);
+    layout->setAlignment(Qt::AlignCenter);
+
+    creditsFenetre->exec();
+}
+
+void HarmonieDesCouleurs::on_actionQuitter_triggered() //Appui sur "menu > quitter"
+{
+    close();
+}
+
+void HarmonieDesCouleurs::on_actionColorimetrie_triggered(){
+    QDialog *aideFenetre = new QDialog(this);
+    aideFenetre->setWindowTitle("Aide");
+    aideFenetre->setFixedSize(400,350);
+
+    //Logo
+    QImage *aideImage = new QImage("../HarmonieDesCouleurs/colors.png");
+    QImage aideImageResized = aideImage->scaledToWidth(64,Qt::SmoothTransformation);
+    QLabel* aideLabel = new QLabel();
+    aideLabel->setPixmap(QPixmap::fromImage(aideImageResized));
+    aideLabel->show();
+
+    //Analagoue
+    QLabel *harmoTexte1 = new QLabel(aideFenetre);
+    harmoTexte1->setText("Analogue");
+
+    QImage *harmoImage1 = new QImage("../HarmonieDesCouleurs/Analogue.png");
+    QImage harmonImage1Resized = harmoImage1->scaledToWidth(100,Qt::SmoothTransformation);
+    QLabel* harmonImage1Label = new QLabel();
+    harmonImage1Label->setPixmap(QPixmap::fromImage(harmonImage1Resized));
+    harmonImage1Label->show();
+
+    //Complementaire
+    QLabel *harmoTexte2 = new QLabel(aideFenetre);
+    harmoTexte2->setText("Complémentaire");
+
+    QImage *harmoImage2 = new QImage("../HarmonieDesCouleurs/Complementaire.png");
+    QImage harmonImage2Resized = harmoImage2->scaledToWidth(100,Qt::SmoothTransformation);
+    QLabel* harmonImage2Label = new QLabel();
+    harmonImage2Label->setPixmap(QPixmap::fromImage(harmonImage2Resized));
+    harmonImage2Label->show();
+
+    //Triadique
+    QLabel *harmoTexte3 = new QLabel(aideFenetre);
+    harmoTexte3->setText("Triadique");
+
+    QImage *harmoImage3 = new QImage("../HarmonieDesCouleurs/Triadique.png");
+    QImage harmonImage3Resized = harmoImage3->scaledToWidth(100,Qt::SmoothTransformation);
+    QLabel* harmonImage3Label = new QLabel();
+    harmonImage3Label->setPixmap(QPixmap::fromImage(harmonImage3Resized));
+    harmonImage3Label->show();
+
+    //Quadratique
+    QLabel *harmoTexte4 = new QLabel(aideFenetre);
+    harmoTexte4->setText("Quadratique");
+
+    QImage *harmoImage4 = new QImage("../HarmonieDesCouleurs/Quadratique.png");
+    QImage harmonImage4Resized = harmoImage4->scaledToWidth(100,Qt::SmoothTransformation);
+    QLabel* harmonImage4Label = new QLabel();
+    harmonImage4Label->setPixmap(QPixmap::fromImage(harmonImage4Resized));
+    harmonImage4Label->show();
+
+    //Boutons
+    QPushButton *aideBouton = new QPushButton(aideFenetre);
+    aideBouton->setText("Fermer");
+    aideBouton->setFixedSize(80,25);
+
+    QPushButton *aideBoutonPrecedent = new QPushButton(aideFenetre);
+    aideBoutonPrecedent->setText("<");
+    aideBoutonPrecedent->setFixedSize(25,25);
+
+    QPushButton *aideBoutonSuivant = new QPushButton(aideFenetre);
+    aideBoutonSuivant->setText(">");
+    aideBoutonSuivant->setFixedSize(25,25);
+
+    //Font
+    QFont font("Sawasdee", 11);
+    harmoTexte1->setFont(font);
+    harmoTexte2->setFont(font);
+    harmoTexte3->setFont(font);
+    harmoTexte4->setFont(font);
+    aideBouton->setFont(font);
+    aideBoutonPrecedent->setFont(font);
+    aideBoutonSuivant->setFont(font);
+
+    //Connexion éléments
+    QObject::connect(aideBouton, &QPushButton::clicked, aideFenetre, &QDialog::close);
+
+    int indiceTexte = 0;
+    aideBoutonPrecedent->setEnabled(false);
+    harmoTexte2->setVisible(false);
+    harmoTexte3->setVisible(false);
+    harmoTexte4->setVisible(false);
+    harmonImage2Label->setVisible(false);
+    harmonImage3Label->setVisible(false);
+    harmonImage4Label->setVisible(false);
+    QObject::connect(aideBoutonPrecedent, &QPushButton::clicked, [aideBoutonPrecedent, aideBoutonSuivant, harmoTexte1, harmoTexte2, harmoTexte3, harmoTexte4, harmonImage1Label, harmonImage2Label,harmonImage3Label, harmonImage4Label, &indiceTexte]() {
+            indiceTexte--;
+            if (indiceTexte < 0) {
+                indiceTexte = 3;
+            }
+            if (indiceTexte == 0) {
+                aideBoutonPrecedent->setEnabled(false);
+                aideBoutonSuivant->setEnabled(true);
+            }else{
+                aideBoutonPrecedent->setEnabled(true);
+                aideBoutonSuivant->setEnabled(true);
+            }
+            harmoTexte1->setVisible(indiceTexte == 0);
+            harmoTexte2->setVisible(indiceTexte == 1);
+            harmoTexte3->setVisible(indiceTexte == 2);
+            harmoTexte4->setVisible(indiceTexte == 3);
+            harmonImage1Label->setVisible(indiceTexte == 0);
+            harmonImage2Label->setVisible(indiceTexte == 1);
+            harmonImage3Label->setVisible(indiceTexte == 2);
+            harmonImage4Label->setVisible(indiceTexte == 3);
+        });
+
+    QObject::connect(aideBoutonSuivant, &QPushButton::clicked, [aideBoutonPrecedent, aideBoutonSuivant, harmoTexte1, harmoTexte2, harmoTexte3, harmoTexte4, harmonImage1Label, harmonImage2Label,harmonImage3Label, harmonImage4Label, &indiceTexte]() {
+            indiceTexte++;
+            if (indiceTexte > 3) {
+                indiceTexte = 0;
+            }
+            if (indiceTexte == 3) {
+                aideBoutonSuivant->setEnabled(false);
+                aideBoutonPrecedent->setEnabled(true);
+            }else{
+                aideBoutonSuivant->setEnabled(true);
+                aideBoutonPrecedent->setEnabled(true);
+            }
+            harmoTexte1->setVisible(indiceTexte == 0);
+            harmoTexte2->setVisible(indiceTexte == 1);
+            harmoTexte3->setVisible(indiceTexte == 2);
+            harmoTexte4->setVisible(indiceTexte == 3);
+            harmonImage1Label->setVisible(indiceTexte == 0);
+            harmonImage2Label->setVisible(indiceTexte == 1);
+            harmonImage3Label->setVisible(indiceTexte == 2);
+            harmonImage4Label->setVisible(indiceTexte == 3);
+        });
+
+    //Layout Bouton
+    QHBoxLayout *layoutBoutons = new QHBoxLayout();
+    layoutBoutons->addWidget(aideBoutonPrecedent);
+    layoutBoutons->addWidget(aideBouton);
+    layoutBoutons->addWidget(aideBoutonSuivant);
+
+    //Layout général
+    QVBoxLayout *layout = new QVBoxLayout(aideFenetre);
+    layout->addWidget(aideLabel, 0, Qt::AlignCenter);
+    layout->addWidget(harmoTexte1, 0, Qt::AlignCenter);
+    layout->addWidget(harmonImage1Label, 0, Qt::AlignCenter);
+    layout->addWidget(harmoTexte2, 0, Qt::AlignCenter);
+    layout->addWidget(harmonImage2Label, 0, Qt::AlignCenter);
+    layout->addWidget(harmoTexte3, 0, Qt::AlignCenter);
+    layout->addWidget(harmonImage3Label, 0, Qt::AlignCenter);
+    layout->addWidget(harmoTexte4, 0, Qt::AlignCenter);
+    layout->addWidget(harmonImage4Label, 0, Qt::AlignCenter);
+    layout->addLayout(layoutBoutons);
+    layout->setAlignment(Qt::AlignCenter);
+
+    aideFenetre->exec();
+}
+
+void HarmonieDesCouleurs::on_actionAide_de_Harmonie_Des_Couleurs_triggered(){
+    QDialog *aideFenetre = new QDialog(this);
+    aideFenetre->setWindowTitle("Aide");
+
+    QImage *aideImage = new QImage("../HarmonieDesCouleurs/info.png");
+    QImage aideImageResized = aideImage->scaledToWidth(64,Qt::SmoothTransformation);
+    QLabel* aideLabel = new QLabel();
+    aideLabel->setPixmap(QPixmap::fromImage(aideImageResized));
+    aideLabel->show();
+
+    QLabel *aideTexte = new QLabel(aideFenetre);
+    aideTexte->setText("<br>Cette application permet d'harmoniser les couleurs d'une image :<br>"
+                       "1 - Importer une image avec le bouton Parcourir <br>"
+                       "2 - Sélectionner la couleur principale : <br>"
+                       "---- Soit via le générateur de couleurs dominantes : <br>"
+                       "-------- Cliquer sur générer puis choisir une des 4 couleurs<br>"
+                       "---- Soit via la sélection avec la palette <br>"
+                       "3 - Choisir le type d'harmonisation <br>"
+                       "4 - Choisir la largeur de la bande de l'harmonisation <br>"
+                       "<i>(Choisir 360 rendra un résultat similaire à l'image originale)</i><br>"
+                       "5 - Cliquer sur générer l'image <br>"
+                       "6 - Enregistrer l'image sur votre ordinateur <i>(optionnel)</i><br>");
+
+    QPushButton *aideBouton = new QPushButton(aideFenetre);
+    aideBouton->setText("Fermer");
+    aideBouton->setFixedSize(80,25);
+
+    QFont font("Sawasdee", 11);
+    aideTexte->setFont(font);
+    aideBouton->setFont(font);
+
+
+    QObject::connect(aideBouton, &QPushButton::clicked, aideFenetre, &QDialog::close);
+
+
+    QVBoxLayout *layout = new QVBoxLayout(aideFenetre);
+    layout->addWidget(aideLabel, 0, Qt::AlignCenter);
+    layout->addWidget(aideTexte);
+    layout->addWidget(aideBouton, 0, Qt::AlignCenter);
+    layout->setAlignment(Qt::AlignCenter);
+
+    aideFenetre->exec();
+
+
+}
+
+/* DEBUT CONTENU APP */
+void HarmonieDesCouleurs::on_Parcourir_clicked() //Appui pour choisir un fichier image *.ppm
+{
+    //QLabel* cheminFichier_label = new QLabel(this);
+    cheminFichier = QFileDialog::getOpenFileName(this, tr("Ouvrir un fichier"), QDir::homePath(), tr("Images *.ppm"));
+
+    QFileInfo fileInfo(cheminFichier);
+    nomFichier = fileInfo.fileName();
+
+    if(!cheminFichier.isEmpty()){
+        qDebug() << "Nom de fichier sélectionné : " << nomFichier;
+        imageValide = true;
+        imageIsSet(imageValide);
+        ui->cheminParcourir->setText(cheminFichier);
+        QImage image(cheminFichier);
+        image = image.scaledToWidth(ui->init_image_label->width(),Qt::SmoothTransformation);
+
+        if(!image.isNull()){
+            //QLabel* image_label = new QLabel(this);
+            ui->init_image_label -> setFixedSize((image.size()));
+            ui->init_image_label -> setPixmap(QPixmap::fromImage(image));
+
+            //Affichage du texte sur Image Modifiée
+            ui->final_image_label->setText("Veuillez sélectionner une couleur...");
+        }
+
+    } else {
+        qDebug() << "Aucun fichier sélectionné";
+    }
+
+}
+
 void HarmonieDesCouleurs::imageIsSet(bool imageValide){
     if(!imageValide){ //Si l'image n'est pas valide
         ui->Supprimer->setVisible(false);
@@ -133,42 +422,6 @@ void HarmonieDesCouleurs::imageIsModified(bool imageModifiee){
     }
 }
 
-void HarmonieDesCouleurs::on_actionQuitter_triggered() //Appui sur "menu > quitter"
-{
-    close();
-}
-
-void HarmonieDesCouleurs::on_Parcourir_clicked() //Appui pour choisir un fichier image *.ppm
-{
-    //QLabel* cheminFichier_label = new QLabel(this);
-    cheminFichier = QFileDialog::getOpenFileName(this, tr("Ouvrir un fichier"), QDir::homePath(), tr("Images *.ppm"));
-
-    QFileInfo fileInfo(cheminFichier);
-    nomFichier = fileInfo.fileName();
-
-    if(!cheminFichier.isEmpty()){
-        qDebug() << "Nom de fichier sélectionné : " << nomFichier;
-        imageValide = true;
-        imageIsSet(imageValide);
-        ui->cheminParcourir->setText(cheminFichier);
-        QImage image(cheminFichier);
-        image = image.scaledToWidth(ui->init_image_label->width(),Qt::SmoothTransformation);
-
-        if(!image.isNull()){
-            //QLabel* image_label = new QLabel(this);
-            ui->init_image_label -> setFixedSize((image.size()));
-            ui->init_image_label -> setPixmap(QPixmap::fromImage(image));
-
-            //Affichage du texte sur Image Modifiée
-            ui->final_image_label->setText("Veuillez sélectionner une couleur...");
-        }
-
-    } else {
-        qDebug() << "Aucun fichier sélectionné";
-    }
-
-}
-
 void HarmonieDesCouleurs::colorChosen(bool colorChosenBool){ // Si conditions valides, on peut cliquer sur Générer Img
     if(!colorChosenBool){
         ui->GenererImgFinal->setEnabled(false);
@@ -201,25 +454,7 @@ void HarmonieDesCouleurs::on_colorSelector_clicked() //Appui "choix couleur pale
     }
 }
 
-void HarmonieDesCouleurs::on_actionCredits_triggered() //Appui "menu > crédits"
-{
-    QDialog *creditsFenetre = new QDialog(this);
-    creditsFenetre->setWindowTitle("Crédits");
 
-    QLabel *creditsTexte = new QLabel(creditsFenetre);
-    creditsTexte->setText("<center>*** Harmonie des Couleurs ***</center><br><br>"
-                   "Développée par :"
-                   "<p style='text-align: right;'>Christina MAURIN<br>Thibault ODOR</p>"
-                   "<br>"
-                   "Basé sur Qt et C++<br>"
-                   "Crédits background : Vecteezy"
-                   "<br><br>"
-                   "Merci d'utiliser l'application !<br>");
-    creditsFenetre->setLayout(new QVBoxLayout());
-    creditsFenetre->layout()->addWidget((creditsTexte));
-
-    creditsFenetre->exec();
-}
 
 
 
@@ -247,18 +482,38 @@ void HarmonieDesCouleurs::on_dom_colors_clicked() //Appui sur génération des c
         ui->d_color_4->setEnabled(true);
 
     } else {
-        QDialog *ErreurFenetre = new QDialog(this);
-        ErreurFenetre->setWindowTitle("Erreur");
+        QDialog *erreurFenetre = new QDialog(this);
+        erreurFenetre->setWindowTitle("Erreur");
 
-        QLabel *ErreurTexte = new QLabel(ErreurFenetre);
-        ErreurTexte->setText("<center>Attention erreur</center><br><br>"
+        QImage *erreurImage = new QImage("../HarmonieDesCouleurs/erreur.png");
+        QImage erreurImageResized = erreurImage->scaledToWidth(64,Qt::SmoothTransformation);
+        QLabel* erreurLabel = new QLabel();
+        erreurLabel->setPixmap(QPixmap::fromImage(erreurImageResized));
+        erreurLabel->show();
+
+        QLabel *erreurTexte = new QLabel(erreurFenetre);
+        erreurTexte->setText("<cbr><center>Attention erreur</center><br>"
                        "Il n'y a pas d'image choisie."
                        "<br>"
                        "<center>Sélectionnez une image valide.</center><br>");
-        ErreurFenetre->setLayout(new QVBoxLayout());
-        ErreurFenetre->layout()->addWidget((ErreurTexte));
 
-        ErreurFenetre->exec();
+        QPushButton *erreurBouton = new QPushButton(erreurFenetre);
+        erreurBouton->setText("Fermer");
+        erreurBouton->setFixedSize(80,25);
+
+        QFont font("Sawasdee", 11);
+        erreurTexte->setFont(font);
+        erreurBouton->setFont(font);
+
+        QObject::connect(erreurBouton, &QPushButton::clicked, erreurFenetre, &QDialog::close);
+
+        QVBoxLayout *layout = new QVBoxLayout(erreurFenetre);
+        layout->addWidget(erreurLabel, 0, Qt::AlignCenter);
+        layout->addWidget(erreurTexte);
+        layout->addWidget(erreurBouton, 0, Qt::AlignCenter);
+        layout->setAlignment(Qt::AlignCenter);
+
+        erreurFenetre->exec();
     }
 }
 
@@ -353,16 +608,38 @@ void HarmonieDesCouleurs::on_Supprimer_clicked() //Appui sur le bouton "Supprime
 
 
     } else {
-        QDialog *ErreurFenetre = new QDialog(this);
-        ErreurFenetre->setWindowTitle("Erreur");
+        QDialog *erreurFenetre = new QDialog(this);
+        erreurFenetre->setWindowTitle("Erreur");
 
-        QLabel *ErreurTexte = new QLabel(ErreurFenetre);
-        ErreurTexte->setText("<center>Attention erreur</center><br><br>"
-                       "<center>Il n'y a pas d'image à supprimer.</center>");
-        ErreurFenetre->setLayout(new QVBoxLayout());
-        ErreurFenetre->layout()->addWidget((ErreurTexte));
+        QImage *erreurImage = new QImage("../HarmonieDesCouleurs/erreur.png");
+        QImage erreurImageResized = erreurImage->scaledToWidth(64,Qt::SmoothTransformation);
+        QLabel* erreurLabel = new QLabel();
+        erreurLabel->setPixmap(QPixmap::fromImage(erreurImageResized));
+        erreurLabel->show();
 
-        ErreurFenetre->exec();
+        QLabel *erreurTexte = new QLabel(erreurFenetre);
+        erreurTexte->setText("<center><b>Attention erreur :<br>"
+                       "Il n'y a pas d'image à supprimer.</b></center>");
+
+        QPushButton *erreurBouton = new QPushButton(erreurFenetre);
+        erreurBouton->setText("Fermer");
+        erreurBouton->setFixedSize(80,25);
+
+        QFont font("Sawasdee", 11);
+        erreurTexte->setFont(font);
+        erreurBouton->setFont(font);
+
+
+        QObject::connect(erreurBouton, &QPushButton::clicked, erreurFenetre, &QDialog::close);
+
+
+        QVBoxLayout *layout = new QVBoxLayout(erreurFenetre);
+        layout->addWidget(erreurLabel, 0, Qt::AlignCenter);
+        layout->addWidget(erreurTexte);
+        layout->addWidget(erreurBouton, 0, Qt::AlignCenter);
+        layout->setAlignment(Qt::AlignCenter);
+
+        erreurFenetre->exec();
     }
 }
 
@@ -411,6 +688,37 @@ void HarmonieDesCouleurs::on_Save_image_clicked()
         if (!nomFichierSaved.isEmpty()){
             if(imageTransformee.save(nomFichierSaved,"ppm")){
                 qDebug() << "Image Sauvergardée.";
+
+                QDialog *SavedFenetre = new QDialog(this);
+                SavedFenetre->setWindowTitle("Information");
+
+                QImage *savedImage = new QImage("../HarmonieDesCouleurs/saved.png");
+                QImage savedImageResized = savedImage->scaledToWidth(64,Qt::SmoothTransformation);
+                QLabel* savedLabel = new QLabel();
+                savedLabel->setPixmap(QPixmap::fromImage(savedImageResized));
+                savedLabel->show();
+
+                QLabel *SavedTexte = new QLabel(SavedFenetre);
+                SavedTexte->setText("<center>Votre image a bien été sauvergardée.</center>");
+                QPushButton *SavedBouton = new QPushButton(SavedFenetre);
+                SavedBouton->setText("Fermer");
+                SavedBouton->setFixedSize(80,25);
+
+                QFont font("Sawasdee", 11);
+                SavedTexte->setFont(font);
+                SavedBouton->setFont(font);
+
+
+                QObject::connect(SavedBouton, &QPushButton::clicked, SavedFenetre, &QDialog::close);
+
+
+                QVBoxLayout *layout = new QVBoxLayout(SavedFenetre);
+                layout->addWidget(savedLabel, 0, Qt::AlignCenter);
+                layout->addWidget(SavedTexte);
+                layout->addWidget(SavedBouton, 0, Qt::AlignCenter);
+                layout->setAlignment(Qt::AlignCenter);
+
+                SavedFenetre->exec();
             }
         }else{
             return;

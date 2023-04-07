@@ -16,19 +16,27 @@ public:
     ~HarmonieDesCouleurs();
 
 private slots:
-    void imageIsSet(bool imageValide);
+    void on_actionParcourir_triggered();
+
+    void on_actionSupprimer_triggered();
+
+    void on_actionCredits_triggered();
+
+    void on_actionQuitter_triggered();
+
+    void on_actionColorimetrie_triggered();
+
+    void on_actionAide_de_Harmonie_Des_Couleurs_triggered();
 
     void on_Parcourir_clicked();
 
-    void on_actionQuitter_triggered();
+    void imageIsSet(bool imageValide);
 
     void colorChosen(bool colorChosenBool);
 
     void on_colorSelector_clicked();
 
     void imageIsModified(bool imageModifiee);
-
-    void on_actionCredits_triggered();
 
     void on_dom_colors_clicked();
 
@@ -43,7 +51,6 @@ private slots:
     void on_d_color_4_clicked();
 
     void on_GenererImgFinal_clicked();
-
 
     void on_Save_image_clicked();
 
