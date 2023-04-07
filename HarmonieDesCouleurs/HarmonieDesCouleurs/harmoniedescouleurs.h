@@ -18,6 +18,10 @@ public:
 private slots:
     void on_actionParcourir_triggered();
 
+    void on_actionImport(int format);
+
+    void on_actionExport(int format);
+
     void on_actionSupprimer_triggered();
 
     void on_actionCredits_triggered();
@@ -32,15 +36,9 @@ private slots:
 
     void imageIsSet(bool imageValide);
 
-    void colorChosen(bool colorChosenBool);
-
     void on_colorSelector_clicked();
 
-    void imageIsModified(bool imageModifiee);
-
     void on_dom_colors_clicked();
-
-    void on_Supprimer_clicked();
 
     void on_d_color_1_clicked();
 
@@ -50,9 +48,15 @@ private slots:
 
     void on_d_color_4_clicked();
 
+    void colorChosen(bool colorChosenBool);
+
     void on_GenererImgFinal_clicked();
 
+    void imageIsModified(bool imageModifiee);
+
     void on_Save_image_clicked();
+
+    void on_Supprimer_clicked();
 
 private:
     Ui::HarmonieDesCouleurs *ui;

@@ -16,6 +16,12 @@
     <height>540</height>
    </size>
   </property>
+  <property name="maximumSize">
+   <size>
+    <width>960</width>
+    <height>540</height>
+   </size>
+  </property>
   <property name="sizeIncrement">
    <size>
     <width>0</width>
@@ -666,12 +672,26 @@ background-position: center;</string>
    </property>
    <widget class="QMenu" name="menuMenu">
     <property name="title">
-     <string>Menu</string>
+     <string>Fichier</string>
     </property>
+    <widget class="QMenu" name="menuImporterImg">
+     <property name="title">
+      <string>Importer...</string>
+     </property>
+     <addaction name="actionImportPNG"/>
+     <addaction name="actionImportJPEG"/>
+    </widget>
+    <widget class="QMenu" name="menuExporterImg">
+     <property name="title">
+      <string>Exporter...</string>
+     </property>
+     <addaction name="actionExportPNG"/>
+     <addaction name="actionExportJPEG"/>
+    </widget>
     <addaction name="actionParcourir"/>
+    <addaction name="menuImporterImg"/>
+    <addaction name="menuExporterImg"/>
     <addaction name="actionSupprimer"/>
-    <addaction name="separator"/>
-    <addaction name="actionCredits"/>
     <addaction name="separator"/>
     <addaction name="actionQuitter"/>
    </widget>
@@ -681,6 +701,8 @@ background-position: center;</string>
     </property>
     <addaction name="actionColorimetrie"/>
     <addaction name="actionAide_de_Harmonie_Des_Couleurs"/>
+    <addaction name="separator"/>
+    <addaction name="actionCredits"/>
    </widget>
    <addaction name="menuMenu"/>
    <addaction name="menuAide"/>
@@ -729,6 +751,26 @@ background-position: center;</string>
   <action name="actionColorimetrie">
    <property name="text">
     <string>Aide Colorimetrie</string>
+   </property>
+  </action>
+  <action name="actionExportPNG">
+   <property name="text">
+    <string>au format PNG</string>
+   </property>
+  </action>
+  <action name="actionImportPNG">
+   <property name="text">
+    <string>au format PNG</string>
+   </property>
+  </action>
+  <action name="actionImportJPEG">
+   <property name="text">
+    <string>au format JPEG</string>
+   </property>
+  </action>
+  <action name="actionExportJPEG">
+   <property name="text">
+    <string>au format JPEG</string>
    </property>
   </action>
  </widget>

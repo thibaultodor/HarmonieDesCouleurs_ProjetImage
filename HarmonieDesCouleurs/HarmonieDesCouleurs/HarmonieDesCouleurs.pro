@@ -9,12 +9,10 @@ CONFIG += c++11
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
-    fancyslider.cpp \
     main.cpp \
     harmoniedescouleurs.cpp
 
 HEADERS += \
-    fancyslider.h \
     harmoniedescouleurs.h
 
 FORMS += \
@@ -24,6 +22,7 @@ TRANSLATIONS += \
     HarmonieDesCouleurs_fr_FR.ts
 CONFIG += lrelease
 CONFIG += embed_translations
+QT += concurrent
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

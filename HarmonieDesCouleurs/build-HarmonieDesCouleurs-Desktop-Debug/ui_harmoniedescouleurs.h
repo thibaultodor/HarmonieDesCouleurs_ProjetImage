@@ -38,6 +38,10 @@ public:
     QAction *actionSupprimer;
     QAction *actionNouvelle_Fenetre;
     QAction *actionColorimetrie;
+    QAction *actionExportPNG;
+    QAction *actionImportPNG;
+    QAction *actionImportJPEG;
+    QAction *actionExportJPEG;
     QWidget *centralwidget;
     QWidget *horizontalLayoutWidget;
     QHBoxLayout *horizontalLayout_3;
@@ -75,6 +79,8 @@ public:
     QPushButton *Save_image;
     QMenuBar *menubar;
     QMenu *menuMenu;
+    QMenu *menuImporterImg;
+    QMenu *menuExporterImg;
     QMenu *menuAide;
     QStatusBar *statusbar;
 
@@ -84,6 +90,7 @@ public:
             HarmonieDesCouleurs->setObjectName(QString::fromUtf8("HarmonieDesCouleurs"));
         HarmonieDesCouleurs->resize(960, 540);
         HarmonieDesCouleurs->setMinimumSize(QSize(960, 540));
+        HarmonieDesCouleurs->setMaximumSize(QSize(960, 540));
         HarmonieDesCouleurs->setSizeIncrement(QSize(0, 0));
         HarmonieDesCouleurs->setBaseSize(QSize(0, 0));
         HarmonieDesCouleurs->setMouseTracking(false);
@@ -104,6 +111,14 @@ public:
         actionNouvelle_Fenetre->setObjectName(QString::fromUtf8("actionNouvelle_Fenetre"));
         actionColorimetrie = new QAction(HarmonieDesCouleurs);
         actionColorimetrie->setObjectName(QString::fromUtf8("actionColorimetrie"));
+        actionExportPNG = new QAction(HarmonieDesCouleurs);
+        actionExportPNG->setObjectName(QString::fromUtf8("actionExportPNG"));
+        actionImportPNG = new QAction(HarmonieDesCouleurs);
+        actionImportPNG->setObjectName(QString::fromUtf8("actionImportPNG"));
+        actionImportJPEG = new QAction(HarmonieDesCouleurs);
+        actionImportJPEG->setObjectName(QString::fromUtf8("actionImportJPEG"));
+        actionExportJPEG = new QAction(HarmonieDesCouleurs);
+        actionExportJPEG->setObjectName(QString::fromUtf8("actionExportJPEG"));
         centralwidget = new QWidget(HarmonieDesCouleurs);
         centralwidget->setObjectName(QString::fromUtf8("centralwidget"));
         centralwidget->setStyleSheet(QString::fromUtf8(""));
@@ -337,6 +352,10 @@ public:
         menubar->setGeometry(QRect(0, 0, 960, 22));
         menuMenu = new QMenu(menubar);
         menuMenu->setObjectName(QString::fromUtf8("menuMenu"));
+        menuImporterImg = new QMenu(menuMenu);
+        menuImporterImg->setObjectName(QString::fromUtf8("menuImporterImg"));
+        menuExporterImg = new QMenu(menuMenu);
+        menuExporterImg->setObjectName(QString::fromUtf8("menuExporterImg"));
         menuAide = new QMenu(menubar);
         menuAide->setObjectName(QString::fromUtf8("menuAide"));
         HarmonieDesCouleurs->setMenuBar(menubar);
@@ -349,13 +368,19 @@ public:
         menubar->addAction(menuMenu->menuAction());
         menubar->addAction(menuAide->menuAction());
         menuMenu->addAction(actionParcourir);
+        menuMenu->addAction(menuImporterImg->menuAction());
+        menuMenu->addAction(menuExporterImg->menuAction());
         menuMenu->addAction(actionSupprimer);
         menuMenu->addSeparator();
-        menuMenu->addAction(actionCredits);
-        menuMenu->addSeparator();
         menuMenu->addAction(actionQuitter);
+        menuImporterImg->addAction(actionImportPNG);
+        menuImporterImg->addAction(actionImportJPEG);
+        menuExporterImg->addAction(actionExportPNG);
+        menuExporterImg->addAction(actionExportJPEG);
         menuAide->addAction(actionColorimetrie);
         menuAide->addAction(actionAide_de_Harmonie_Des_Couleurs);
+        menuAide->addSeparator();
+        menuAide->addAction(actionCredits);
 
         retranslateUi(HarmonieDesCouleurs);
 
@@ -378,6 +403,10 @@ public:
         actionSupprimer->setText(QCoreApplication::translate("HarmonieDesCouleurs", "Supprimer", nullptr));
         actionNouvelle_Fenetre->setText(QCoreApplication::translate("HarmonieDesCouleurs", "Nouvelle Fen\303\252tre", nullptr));
         actionColorimetrie->setText(QCoreApplication::translate("HarmonieDesCouleurs", "Aide Colorimetrie", nullptr));
+        actionExportPNG->setText(QCoreApplication::translate("HarmonieDesCouleurs", "au format PNG", nullptr));
+        actionImportPNG->setText(QCoreApplication::translate("HarmonieDesCouleurs", "au format PNG", nullptr));
+        actionImportJPEG->setText(QCoreApplication::translate("HarmonieDesCouleurs", "au format JPEG", nullptr));
+        actionExportJPEG->setText(QCoreApplication::translate("HarmonieDesCouleurs", "au format JPEG", nullptr));
         cheminParcourir->setText(QCoreApplication::translate("HarmonieDesCouleurs", "Chemin du fichier...", nullptr));
         Parcourir->setText(QCoreApplication::translate("HarmonieDesCouleurs", "Parcourir", nullptr));
         Supprimer->setText(QCoreApplication::translate("HarmonieDesCouleurs", "Supprimer", nullptr));
@@ -402,7 +431,9 @@ public:
         radioB__Text_2->setText(QCoreApplication::translate("HarmonieDesCouleurs", "Largeur de la bande :", nullptr));
         valeurSlider->setText(QCoreApplication::translate("HarmonieDesCouleurs", "(s\303\251lectionner une valeur)", nullptr));
         Save_image->setText(QCoreApplication::translate("HarmonieDesCouleurs", "Sauvegarder l'image", nullptr));
-        menuMenu->setTitle(QCoreApplication::translate("HarmonieDesCouleurs", "Menu", nullptr));
+        menuMenu->setTitle(QCoreApplication::translate("HarmonieDesCouleurs", "Fichier", nullptr));
+        menuImporterImg->setTitle(QCoreApplication::translate("HarmonieDesCouleurs", "Importer...", nullptr));
+        menuExporterImg->setTitle(QCoreApplication::translate("HarmonieDesCouleurs", "Exporter...", nullptr));
         menuAide->setTitle(QCoreApplication::translate("HarmonieDesCouleurs", "Aide", nullptr));
     } // retranslateUi
 
