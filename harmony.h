@@ -6,6 +6,7 @@
 #include <random>
 #include <cmath>
 #include <algorithm>
+#include <queue>
 #include "image_ppm.h"
 
 using namespace std;
@@ -18,6 +19,11 @@ struct Pixel {
     bool operator==(const Pixel& p) const {
         return r == p.r && g == p.g && b == p.b;
     }
+};
+
+// A simple struct to represent a pixel with HSL values
+struct PixelHSL {
+    double h,s,l;
 };
 
 // Calculate the Euclidean distance between two pixels
@@ -93,7 +99,13 @@ void kmeans(const vector<Pixel>& pixels, vector<Pixel>& centroids, int k, int ma
 }
 
 // colors using number_of_dominant_colors-means algorithm
-vector<Pixel> get_dominant_colors(const vector<Pixel>& pixels, int number_of_dominant_colors) {
+vector<Pixel> get_dominant_colors(const vector<Pixel>& pixels, int number_of_dominant_colors,int nH,int nW) {
+    std::vector<Pixel> ImgKmean;
+    OCTET * ImgOut;
+    int nTaille3 = (nH*nW)*3;
+    allocation_tableau(ImgOut,OCTET,nTaille3);
+
+
     vector<Pixel> centroids;
     kmeans(pixels, centroids, number_of_dominant_colors, 30);
     // Run k-means algorithm
@@ -109,7 +121,7 @@ vector<Pixel> get_dominant_colors(const vector<Pixel>& pixels, int number_of_dom
                 min_distance = distance;
             }
         }
-
+        ImgKmean.emplace_back(centroids[label]);
         counts[label]++;
     }
 
@@ -125,6 +137,14 @@ vector<Pixel> get_dominant_colors(const vector<Pixel>& pixels, int number_of_dom
     for (int i = 0; i < min(number_of_dominant_colors, static_cast<int>(centroids.size())); i++) {
         dominant_colors.push_back(centroids[cluster_counts[i].second]);
     }
+
+    for (int z=0; z < nTaille3; z+=3)
+    {
+        ImgOut[z] = ImgKmean[z/3].r;
+        ImgOut[z+1] = ImgKmean[z/3].g;
+        ImgOut[z+2] = ImgKmean[z/3].b;
+    }
+    ecrire_image_ppm("Image_Kmean.ppm",ImgOut,nH,nW);
 
     return dominant_colors;
 }
@@ -246,6 +266,51 @@ vector<double> distanceMin(std::vector<double> hList,double hRef){
     return vectorReturn;
 }
 
+// Function to calculate the Euclidean distance between two RGB values
+double distance(Pixel a, Pixel b) {
+    return sqrt(pow(a.r - b.r, 2) + pow(a.g - b.g, 2) + pow(a.b - b.b, 2));
+}
+
+// Function to denoise an image using a simple filter
+void denoise(Pixel* image, int width, int height, int filter_size, double threshold) {
+    // Create a copy of the original image
+    Pixel* filtered = new Pixel[width * height];
+    memcpy(filtered, image, width * height * sizeof(Pixel));
+
+    // Apply the filter to each pixel in the image
+    for (int y = filter_size / 2; y < height - filter_size / 2; y++) {
+        for (int x = filter_size / 2; x < width - filter_size / 2; x++) {
+            // Compute the average RGB values of the neighboring pixels
+            int r_sum = 0, g_sum = 0, b_sum = 0, count = 0;
+            for (int j = -filter_size / 2; j <= filter_size / 2; j++) {
+                for (int i = -filter_size / 2; i <= filter_size / 2; i++) {
+                    Pixel p = image[(y + j) * width + x + i];
+                    r_sum += p.r;
+                    g_sum += p.g;
+                    b_sum += p.b;
+                    count++;
+                }
+            }
+            int r_avg = r_sum / count;
+            int g_avg = g_sum / count;
+            int b_avg = b_sum / count;
+
+            // Calculate the distance between the center pixel and the average RGB values
+            Pixel center = image[y * width + x];
+            double dist = distance(center, { (OCTET)r_avg, (OCTET)g_avg, (OCTET)b_avg });
+
+            // If the distance is greater than the threshold, replace the center pixel with the average RGB values
+            if (dist > threshold) {
+                filtered[y * width + x] = { (OCTET)r_avg, (OCTET)g_avg, (OCTET)b_avg };
+            }
+        }
+    }
+
+    // Copy the filtered image back to the original image
+    memcpy(image, filtered, width * height * sizeof(Pixel));
+    delete[] filtered;
+}
+
 void ComplementaryHarmony(const std::vector<Pixel> &pdominant,const std::vector<Pixel>& listePixels,int nH,int nW,double sizeBand){
     OCTET *ImgOut;
     int nTaille = nH * nW;
@@ -279,7 +344,7 @@ void ComplementaryHarmony(const std::vector<Pixel> &pdominant,const std::vector<
             ImgOut[z+1] = listePixelsTransform[z/3].g;
             ImgOut[z+2] = listePixelsTransform[z/3].b;
         }
-        ecrire_image_ppm(("Complementary"+ to_string(i)+".ppm").data(),ImgOut,nH,nW);
+        //ecrire_image_ppm(("Complementary"+ to_string(i)+".ppm").data(),ImgOut,nH,nW);
     }
 }
 
@@ -356,7 +421,7 @@ void AnalogueHarmony(const std::vector<Pixel> &pdominant,const std::vector<Pixel
             ImgOut[z+1] = listePixelsTransform[z/3].g;
             ImgOut[z+2] = listePixelsTransform[z/3].b;
         }
-        ecrire_image_ppm(("Analogue"+ to_string(i)+".ppm").data(),ImgOut,nH,nW);
+        //ecrire_image_ppm(("Analogue"+ to_string(i)+".ppm").data(),ImgOut,nH,nW);
     }
 }
 
@@ -435,7 +500,7 @@ void TriadiqueHarmony(const std::vector<Pixel> &pdominant,const std::vector<Pixe
             ImgOut[z+1] = listePixelsTransform[z/3].g;
             ImgOut[z+2] = listePixelsTransform[z/3].b;
         }
-        ecrire_image_ppm(("Triadique"+ to_string(i)+".ppm").data(),ImgOut,nH,nW);
+        //ecrire_image_ppm(("Triadique"+ to_string(i)+".ppm").data(),ImgOut,nH,nW);
     }
 }
 
@@ -519,11 +584,13 @@ void SquareHarmony(const std::vector<Pixel> &pdominant,const std::vector<Pixel>&
             ImgOut[z+1] = listePixelsTransform[z/3].g;
             ImgOut[z+2] = listePixelsTransform[z/3].b;
         }
-        ecrire_image_ppm(("Square"+ to_string(i)+".ppm").data(),ImgOut,nH,nW);
+        ecrire_image_ppm("Square.ppm",ImgOut,nH,nW);
     }
 }
 
-void SquareHarmonyQT(const Pixel &cdominant,char * filePath,double sizeBand){
+void  SquareHarmonyQT(const Pixel &cdominant,char * filePath,double sizeBand){
+    std::vector<PixelHSL> img;
+
     OCTET *ImgOut,*ImgIn;
     int nH,nW;
     lire_nb_lignes_colonnes_image_ppm(filePath, &nH, &nW);
@@ -555,6 +622,7 @@ void SquareHarmonyQT(const Pixel &cdominant,char * filePath,double sizeBand){
         std::vector<double> vectorDistance = distanceMin(hList,hP);
         double distance = vectorDistance[1];
         double Color_Out = (distance / radius) * (sizeBand / 2) + vectorDistance[0];
+        img.emplace_back(PixelHSL({Color_Out,sP,lP}));
         HSLtoRGB((float)Color_Out,(float)sP,(float)lP,rP,gP,bP);
         Pixel pT = {rP,gP,bP};
         listePixelsTransform.emplace_back(pT);
@@ -566,6 +634,184 @@ void SquareHarmonyQT(const Pixel &cdominant,char * filePath,double sizeBand){
         ImgOut[z+2] = listePixelsTransform[z/3].b;
     }
     ecrire_image_ppm("Image_Transform.ppm",ImgOut,nH,nW);
+}
+
+// Define a struct to store the (x, y) coordinates of a pixel
+struct Point {
+    int x, y;
+};
+
+// Define a struct to store the connected component label and color
+struct Component {
+    int label, color;
+};
+
+// Define a function to get the index of a pixel in a 1D array
+int getIndex(int x, int y, int width) {
+    return y * width + x;
+}
+
+// Define a function to get the (x, y) coordinates of a pixel from its index in a 1D array
+Point getCoordinates(int index, int width) {
+    int y = index / width;
+    int x = index % width;
+    return {x, y};
+}
+
+// Define a function to assign a unique value to each segment of the same color
+void assignSegmentValues(OCTET * image, int* segmentValues,int IMAGE_WIDTH,int IMAGE_HEIGHT) {
+    // Allocate memory for the visited array
+    bool *visited = new bool[IMAGE_WIDTH * IMAGE_HEIGHT]();
+
+    // Define the number of connected components and the current label
+    int numComponents = 0;
+    int currentLabel = 0;
+
+    // Define a queue to store the pixels to be processed
+    std::queue<Point> pixels;
+
+    // Iterate over each pixel in the image
+    for (int i = 0; i < IMAGE_WIDTH * IMAGE_HEIGHT; i++) {
+        // Skip the pixel if it has already been visited
+        if (visited[i]) {
+            continue;
+        }
+
+        // Get the color of the current pixel
+        int color = (image[3 * i] << 16) + (image[3 * i + 1] << 8) + image[3 * i + 2];
+
+        // Start a new segment with a new label
+        numComponents++;
+        currentLabel++;
+
+        // Assign the label and color to the current component
+        Component currentComponent = {currentLabel, color};
+
+        // Add the current pixel to the queue and mark it as visited
+        pixels.push(getCoordinates(i, IMAGE_WIDTH));
+        visited[i] = true;
+
+        // Process all pixels in the current segment using BFS
+        while (!pixels.empty()) {
+            // Get the next pixel from the queue
+            Point currentPixel = pixels.front();
+            pixels.pop();
+
+            // Assign the current label to the current pixel
+            segmentValues[getIndex(currentPixel.x, currentPixel.y, IMAGE_WIDTH)] = currentLabel;
+
+            // Check the neighbors of the current pixel
+            for (int dx = -1; dx <= 1; dx++) {
+                for (int dy = -1; dy <= 1; dy++) {
+                    // Skip the current pixel
+                    if (dx == 0 && dy == 0) {
+                        continue;
+                    }
+
+                    // Compute the (x, y) coordinates of the neighbor pixel
+                    int neighborX = currentPixel.x + dx;
+                    int neighborY = currentPixel.y + dy;
+
+                    // Check if the neighbor pixel is within the image boundaries
+                    if (neighborX < 0 || neighborX >= IMAGE_WIDTH || neighborY < 0 || neighborY >= IMAGE_HEIGHT) {
+                        continue;
+                    }
+
+                    // Get the index and color of the neighbor pixel
+                    int neighborIndex = getIndex(neighborX, neighborY, IMAGE_WIDTH);
+                    int neighborColor = (image[3 * neighborIndex] << 16) + (image[3 * neighborIndex + 1] << 8) +
+                                        image[3 * neighborIndex + 2];
+
+                    // Check if the neighbor pixel has the same color as the current pixel and has not been visited
+                    if (neighborColor == color && !visited[neighborIndex]) {
+                        // Add the neighbor pixel to the queue and mark it as visited
+                        pixels.push({neighborX, neighborY});
+                        visited[neighborIndex] = true;
+                    }
+                }
+            }
+        }
+    }
+
+// Free the memory allocated for the visited array
+    delete[] visited;
+}
+
+struct PixelXY {
+    int index;
+    OCTET r, g, b;
+};
+
+void printRGB(std::vector<PixelXY> v){
+    for (int i = 0; i < v.size(); ++i) {
+        std::cout << (int)v[i].r << " " << (int)v[i].g << " " << (int)v[i].b << std::endl;
+    }
+}
+
+std::vector<double> calculate_mean(const std::vector<PixelXY>& rgb_vec) {
+    //printRGB(rgb_vec);
+    std::vector<double> sum;
+    sum.resize(3);
+    for (const auto& rgb : rgb_vec) {
+        sum[0] += rgb.r;
+        sum[1] += rgb.g;
+        sum[2] += rgb.b;
+    }
+    sum[0] = sum[0] / rgb_vec.size();
+    sum[1] = sum[1] / rgb_vec.size();
+    sum[2] = sum[2] / rgb_vec.size();
+    return sum;
+}
+
+std::vector<double> calculate_variance(const std::vector<PixelXY>& rgb_vec) {
+    //printRGB(rgb_vec);
+    std::vector<double> mean;
+    mean = calculate_mean(rgb_vec);
+    //std::cout << " " << mean[0] << " " << mean[1] << " " << mean[2] << std::endl;
+    std::vector<double> variance;
+    variance.resize(3);
+    for (const auto& rgb : rgb_vec) {
+        variance[0] += pow(rgb.r - mean[0], 2);
+        variance[1] += pow(rgb.g - mean[1], 2);
+        variance[2] += pow(rgb.b - mean[2], 2);
+    }
+    variance[0] = variance[0] / rgb_vec.size();
+    variance[1] = variance[1] / rgb_vec.size();
+    variance[2] = variance[2] / rgb_vec.size();
+    if(variance[0] == 0 && variance[1] == 0 && variance[2] == 0){
+        variance[0] = rgb_vec[0].r;variance[1] = rgb_vec[0].g;variance[2] = rgb_vec[0].b;
+    }
+    return variance;
+}
+
+Pixel getMostColourZone(const std::vector<PixelXY>& zone){
+    vector<int> red_hist(256, 0);
+    vector<int> green_hist(256, 0);
+    vector<int> blue_hist(256, 0);
+
+    for (auto i : zone) {
+        red_hist[i.r]++;
+        green_hist[i.g]++;
+        blue_hist[i.b]++;
+    }
+
+    int most_used_red = 0;
+    int most_used_green = 0;
+    int most_used_blue = 0;
+    for (int i = 0; i < 256; i++) {
+        if (red_hist[i] > red_hist[most_used_red]) {
+            most_used_red = i;
+        }
+        if (green_hist[i] > green_hist[most_used_green]) {
+            most_used_green = i;
+        }
+        if (blue_hist[i] > blue_hist[most_used_blue]) {
+            most_used_blue = i;
+        }
+    }
+
+    // combine most used color components to get overall most used color
+    return Pixel{(OCTET)most_used_red,(OCTET)most_used_green,(OCTET)most_used_blue};
 }
 
 #endif //HARMONIEDESCOULEURS_PROJETIMAGE_HARMONY_H
