@@ -11,3 +11,4 @@
 * [Compte rendu n°4](https://github.com/thibaultodor/HarmonieDesCouleurs_ProjetImage/blob/main/Comptes%20Rendus/Harmonie_des_Couleurs_CR4.pdf)
 * [Compte rendu n°5](https://github.com/thibaultodor/HarmonieDesCouleurs_ProjetImage/blob/main/Comptes%20Rendus/Harmonie_des_Couleurs_CR5.pdf)
 * [Compte rendu n°6](https://github.com/thibaultodor/HarmonieDesCouleurs_ProjetImage/blob/main/Comptes%20Rendus/Harmonie_des_Couleurs_CR6.pdf)
+* [Compte rendu n°7](https://github.com/thibaultodor/HarmonieDesCouleurs_ProjetImage/blob/main/Comptes%20Rendus/Harmonie_des_Couleurs_CR7.pdf)
