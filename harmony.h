@@ -144,9 +144,60 @@ vector<Pixel> get_dominant_colors(const vector<Pixel>& pixels, int number_of_dom
         ImgOut[z+1] = ImgKmean[z/3].g;
         ImgOut[z+2] = ImgKmean[z/3].b;
     }
-    ecrire_image_ppm("Image_Kmean.ppm",ImgOut,nH,nW);
+    //ecrire_image_ppm("Image_Kmean.ppm",ImgOut,nH,nW);
 
     return dominant_colors;
+}
+
+
+// colors using number_of_dominant_colors-means algorithm
+OCTET * get_dominant_colors_FIX(const vector<Pixel>& pixels, int number_of_dominant_colors,int nH,int nW) {
+    std::vector<Pixel> ImgKmean;
+    OCTET * ImgOut;
+    int nTaille3 = (nH*nW)*3;
+    allocation_tableau(ImgOut,OCTET,nTaille3);
+
+
+    vector<Pixel> centroids;
+    kmeans(pixels, centroids, number_of_dominant_colors, 30);
+    // Run k-means algorithm
+    // Count the number of pixels in each cluster
+    vector<int> counts(centroids.size(), 0);
+    for (int i = 0; i < pixels.size(); i++) {
+        int label = -1;
+        float min_distance = numeric_limits<float>::max();
+        for (int j = 0; j < centroids.size(); j++) {
+            float distance = euclidean_distance(pixels[i], centroids[j]);
+            if (distance < min_distance) {
+                label = j;
+                min_distance = distance;
+            }
+        }
+        ImgKmean.emplace_back(centroids[label]);
+        counts[label]++;
+    }
+
+    // Sort the clusters by the number of pixels in each cluster
+    vector<pair<int, int>> cluster_counts;
+    for (int i = 0; i < centroids.size(); i++) {
+        cluster_counts.push_back(make_pair(counts[i], i));
+    }
+    sort(cluster_counts.begin(), cluster_counts.end(), greater<pair<int, int>>());
+
+// Get the most dominant colors
+    vector<Pixel> dominant_colors;
+    for (int i = 0; i < min(number_of_dominant_colors, static_cast<int>(centroids.size())); i++) {
+        dominant_colors.push_back(centroids[cluster_counts[i].second]);
+    }
+
+    for (int z=0; z < nTaille3; z+=3)
+    {
+        ImgOut[z] = ImgKmean[z/3].r;
+        ImgOut[z+1] = ImgKmean[z/3].g;
+        ImgOut[z+2] = ImgKmean[z/3].b;
+    }
+
+    return ImgOut;
 }
 
 void RGBtoHSL(int r, int g, int b, double &h, double &s, double &l) {
@@ -812,6 +863,115 @@ Pixel getMostColourZone(const std::vector<PixelXY>& zone){
 
     // combine most used color components to get overall most used color
     return Pixel{(OCTET)most_used_red,(OCTET)most_used_green,(OCTET)most_used_blue};
+}
+
+void ImageCorrige(char * filePath,OCTET * ImgTransform,int number_of_color){
+    OCTET *ImgIn,*ImgFix,*ImgOutFix;
+    int nH, nW, nTaille;
+    lire_nb_lignes_colonnes_image_ppm(filePath, &nH, &nW);
+    nTaille = nH * nW;
+    int nTaille3 = nTaille * 3;
+    allocation_tableau(ImgIn, OCTET, nTaille3);
+    allocation_tableau(ImgFix, OCTET, nTaille3);
+    allocation_tableau(ImgOutFix, OCTET, nTaille3);
+    lire_image_ppm(filePath, ImgIn, nH * nW);
+    vector<Pixel> listePixels;
+    for (int i = 0; i < nTaille3; i += 3) {
+        Pixel p = {ImgIn[i], ImgIn[i + 1], ImgIn[i + 2]};
+        listePixels.push_back(p);
+    }
+    OCTET * ImgKmean = get_dominant_colors_FIX(listePixels, number_of_color, nH, nW);
+
+    int* segmentValues = new int[nW * nH];
+    assignSegmentValues(ImgKmean, segmentValues,nW,nH);
+
+    std::vector<std::vector<int>> affecteLabel;
+    affecteLabel.resize(nTaille);
+
+    // Seed the random number generator
+    std::random_device rd;
+    std::mt19937 gen(rd());
+
+    // Create a distribution for each color channel
+    std::uniform_int_distribution<int> distr(0, 255);
+
+    for (int i = 0; i < nTaille; ++i) {
+        // Generate random values for each color channel
+        int red = distr(gen);
+        int green = distr(gen);
+        int blue = distr(gen);
+
+        std::vector<int> v;
+        v.emplace_back(red);v.emplace_back(green);v.emplace_back(blue);
+        affecteLabel[segmentValues[i]] = v;
+    }
+
+    /*
+    int red = distr(gen);
+    int green = distr(gen);
+    int blue = distr(gen);
+    SquareHarmonyQT(Pixel{(OCTET)red,(OCTET)green,(OCTET)blue},cNomImgLue,20);
+
+
+    for (int i = 0; i < nTaille3; i+=3) {
+        ImgOut[i] = affecteLabel[segmentValues[i/3]][0];
+        ImgOut[i+1] = affecteLabel[segmentValues[i/3]][1];
+        ImgOut[i+2] = affecteLabel[segmentValues[i/3]][2];
+    }
+
+    ecrire_image_ppm("test.ppm",ImgOut,nH,nW);
+    */
+
+    std::vector<int> listeLabel;
+    listeLabel.reserve(nTaille);
+    for (int i = 0; i < nTaille; ++i) {listeLabel.emplace_back(segmentValues[i]);}
+    std::sort(listeLabel.begin(), listeLabel.end());
+    // Remove duplicates
+    listeLabel.erase(std::unique(listeLabel.begin(), listeLabel.end()), listeLabel.end());
+
+    std::vector<std::vector<int>> zones;
+    for (int i = 0; i < listeLabel.size(); i++) {
+        std::vector<int> v;
+        for (int j = 0; j < nTaille3; j+=3) {
+            if(segmentValues[j/3] == listeLabel[i]){v.emplace_back(j);}
+        }
+        zones.emplace_back(v);
+    }
+
+    ////////////////////////////////////////////ICI////////////////////////////////////////////
+    lire_image_ppm("Image_Transform.ppm", ImgFix, nH * nW);
+    ///////////////////////////////////////////////////////////////////////////////////////////
+
+    for (auto & zone : zones) {
+        std::vector<PixelXY> listePixelsFix;
+        for (int j = 0; j < zone.size(); j++) {
+            listePixelsFix.emplace_back(PixelXY{zone[j],ImgFix[zone[j]],ImgFix[zone[j]+1],ImgFix[zone[j]+2]});
+        }
+        Pixel colour = getMostColourZone(listePixelsFix);
+        double h,s,l;
+        RGBtoHSL(colour.r,colour.g,colour.b,h,s,l);
+        for (auto & j : listePixelsFix) {
+            double hfix,sfix,lfix;
+            RGBtoHSL(j.r,j.g,j.b,hfix,sfix,lfix);
+            hfix = h;
+            OCTET rfix,gfix,bfix;
+            HSLtoRGB(hfix,sfix,lfix,rfix,gfix,bfix);
+            ImgOutFix[j.index] = rfix;
+            ImgOutFix[j.index+1] = gfix;
+            ImgOutFix[j.index+2] = bfix;
+        }
+    }
+
+    ecrire_image_ppm("Img_Corrigee.ppm",ImgOutFix,nH,nW);
+
+    /*
+    vector<Pixel> listePixelsFix;
+    for (int i = 0; i < nTaille3; i += 3) {
+        Pixel p = {ImgOutFix[i], ImgOutFix[i + 1], ImgOutFix[i + 2]};
+        listePixelsFix.push_back(p);
+    }
+    SquareHarmony({Pixel{(OCTET)red,(OCTET)green,(OCTET)blue}},listePixelsFix,nH,nW,20);
+    */
 }
 
 #endif //HARMONIEDESCOULEURS_PROJETIMAGE_HARMONY_H
