@@ -43,14 +43,18 @@ int main(int argc, char* argv[]) {
     }
     */
 
-    //vector<Pixel> pdominant = get_dominant_colors(listePixels, 4, nH, nW);
+    vector<Pixel> pdominant = get_dominant_colors(listePixels, 4, nH, nW);
 
     //AnalogueHarmony(pdominant,listePixels,nH,nW,2);
     //ComplementaryHarmony(pdominant,listePixels,nH,nW,2);
     //TriadiqueHarmony(pdominant,listePixels,nH,nW,2);
     //ComplementaryHarmonyQT(pdominant[0],cNomImgLue,1);
 
-    ImageCorrige(cNomImgLue,4);
+    //SquareHarmonyQT(pdominant[0],cNomImgLue,20);
+    //ImageCorrige(cNomImgLue,ImgOut,4);
+
+    TriadiqueHarmonyQT(pdominant[0],cNomImgLue,20);
+    ImageCorrige(cNomImgLue,ImgOut,3);
 
     /*
     nW = taille_palette*3;nH=taille_palette*3;
