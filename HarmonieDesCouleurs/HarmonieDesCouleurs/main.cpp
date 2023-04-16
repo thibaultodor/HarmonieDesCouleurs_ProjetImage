@@ -19,5 +19,6 @@ int main(int argc, char *argv[])
     }
     HarmonieDesCouleurs w;
     w.show();
+
     return a.exec();
 }

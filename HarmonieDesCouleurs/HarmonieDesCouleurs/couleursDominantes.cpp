@@ -3,7 +3,6 @@
 #include <cmath>
 #include "harmony.h"
 
-
 void couleursDominantes(char cheminFichier[], Pixel &couleur1, Pixel &couleur2, Pixel &couleur3, Pixel &couleur4){
     //char cNomImgLue[250];
     std::cout << cheminFichier << std::endl;
@@ -29,7 +28,7 @@ void couleursDominantes(char cheminFichier[], Pixel &couleur1, Pixel &couleur2, 
         listePixels.push_back(p);
     }
 
-    vector<Pixel> pdominant = get_dominant_colors(listePixels,4);
+    vector<Pixel> pdominant = get_dominant_colors1(listePixels,4);
 
 //    for (Pixel p:pdominant) {
 //        cout << (int)p.r << " " << (int)p.g << " " << (int)p.b << endl;

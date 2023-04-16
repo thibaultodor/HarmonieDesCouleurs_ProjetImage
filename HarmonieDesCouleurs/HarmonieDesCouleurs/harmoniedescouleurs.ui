@@ -646,6 +646,22 @@ background-position: center;</string>
      <bool>false</bool>
     </property>
    </widget>
+   <widget class="QPushButton" name="correction">
+    <property name="geometry">
+     <rect>
+      <x>870</x>
+      <y>440</y>
+      <width>80</width>
+      <height>30</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">font: 11pt &quot;Sawasdee&quot;;</string>
+    </property>
+    <property name="text">
+     <string>Correction</string>
+    </property>
+   </widget>
    <zorder>background</zorder>
    <zorder>horizontalLayoutWidget</zorder>
    <zorder>colorSelector</zorder>
@@ -660,6 +676,7 @@ background-position: center;</string>
    <zorder>colorChosenUI</zorder>
    <zorder>verticalLayoutWidget</zorder>
    <zorder>Save_image</zorder>
+   <zorder>correction</zorder>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">

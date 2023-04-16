@@ -52,6 +52,8 @@ private slots:
 
     void on_GenererImgFinal_clicked();
 
+    void on_correction_clicked();
+
     void imageIsModified(bool imageModifiee);
 
     void on_Save_image_clicked();

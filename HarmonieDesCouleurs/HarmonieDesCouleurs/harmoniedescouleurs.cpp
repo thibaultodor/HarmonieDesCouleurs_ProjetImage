@@ -37,6 +37,10 @@ bool colorChosenBool;
 Pixel couleur1, couleur2, couleur3, couleur4;
 bool genDomColor = false;
 
+//Concerne la correction img
+int type = 0;
+bool imageIsCorrected = false;
+
 // Fenêtre principale
 HarmonieDesCouleurs::HarmonieDesCouleurs(QWidget *parent)
     : QMainWindow(parent)
@@ -60,18 +64,26 @@ HarmonieDesCouleurs::HarmonieDesCouleurs(QWidget *parent)
 
     QObject::connect(ui->radioB_Analogue, &QRadioButton::clicked, [=](){
         ui->horizontalSlider->setMaximum((359));
+        type = 0;
+        ui->correction->setVisible(false);
     });
 
     QObject::connect(ui->radioB_Complementaire, &QRadioButton::clicked, [=](){
         ui->horizontalSlider->setMaximum((179));
+        type = 0;
+        ui->correction->setVisible(false);
     });
 
     QObject::connect(ui->radioB_Triadique, &QRadioButton::clicked, [=](){
         ui->horizontalSlider->setMaximum((119));
+        type = 3;
+        ui->correction->setVisible(false);
     });
 
     QObject::connect(ui->radioB_Quadratique, &QRadioButton::clicked, [=](){
         ui->horizontalSlider->setMaximum((89));
+        type = 4;
+        ui->correction->setVisible(false);
     });
     //Fin affichage
 
@@ -85,10 +97,16 @@ HarmonieDesCouleurs::HarmonieDesCouleurs(QWidget *parent)
     ui->menuExporterImg->setEnabled(false);
     ui->actionExportPNG->setEnabled(false);
     ui->actionExportJPEG->setEnabled(false);
+
     QObject::connect(ui->GenererImgFinal, &QRadioButton::clicked, [=](){
         ui->menuExporterImg->setEnabled(true);
         ui->actionExportPNG->setEnabled(true);
         ui->actionExportJPEG->setEnabled(true);
+        if(type == 3 || type == 4){
+            ui->correction->setVisible(true);
+        }else{
+            ui->correction->setVisible(false);
+        }
     });
 
     QObject::connect(ui->Supprimer, &QRadioButton::clicked, [=](){
@@ -96,12 +114,17 @@ HarmonieDesCouleurs::HarmonieDesCouleurs(QWidget *parent)
         ui->actionExportPNG->setEnabled(false);
         ui->actionExportJPEG->setEnabled(false);
 
+        ui->correction->setVisible(false);
+        type = 0;
     });
 
     QObject::connect(ui->actionSupprimer, &QAction::triggered, [=](){
         ui->menuExporterImg->setEnabled(false);
         ui->actionExportPNG->setEnabled(false);
         ui->actionExportJPEG->setEnabled(false);
+
+        ui->correction->setVisible(false);
+        type = 0;
     });
 
 
@@ -117,10 +140,18 @@ HarmonieDesCouleurs::HarmonieDesCouleurs(QWidget *parent)
     //Importer boutons
     connect(ui->actionImportPNG, &QAction::triggered, this, [=](){
             on_actionImport(1);
+            ui->correction->setVisible(false);
         });
 
     connect(ui->actionImportJPEG, &QAction::triggered, this, [=](){
             on_actionImport(2);
+            ui->correction->setVisible(false);
+        });
+
+    QObject::connect(ui->correction, &QPushButton::clicked, this, [=](){
+        ui->final_legende->setText("Image Corrigée");
+        ui->correction->setVisible(false);
+        imageIsCorrected = true;
         });
 
 }
@@ -193,7 +224,7 @@ void HarmonieDesCouleurs::on_actionImport(int format) //Appui pour choisir un fi
 
             imageModifiee = false;
             imageIsModified(imageModifiee);
-
+            ui->final_legende->setText("Image Modifiée");
         }
 
     } else {
@@ -205,7 +236,13 @@ void HarmonieDesCouleurs::on_actionImport(int format) //Appui pour choisir un fi
 void HarmonieDesCouleurs::on_actionExport(int format)
 {
     if(imageModifiee){
-        QImage imageTransformee("/tmp/Image_Transform.ppm");
+        QImage imageTransformee;
+        if(imageIsCorrected){
+            imageTransformee.load("/tmp/Img_Corrigee.ppm");
+        }else{
+            imageTransformee.load("/tmp/Image_Transform.ppm");
+        }
+
         QFileInfo info;
         if(importeFichier){
             info.setFile(importeCheminFichier);
@@ -550,6 +587,7 @@ void HarmonieDesCouleurs::on_Parcourir_clicked() //Appui pour choisir un fichier
 
             imageModifiee = false;
             imageIsModified(imageModifiee);
+            ui->final_legende->setText("Image Modifiée");
         }
 
     } else {
@@ -559,6 +597,7 @@ void HarmonieDesCouleurs::on_Parcourir_clicked() //Appui pour choisir un fichier
 }
 
 void HarmonieDesCouleurs::imageIsSet(bool imageValide){
+    ui->correction->setVisible(false);
     if(!imageValide){ //Si l'image n'est pas valide
         ui->Supprimer->setVisible(false);
         //Image originale
@@ -610,6 +649,7 @@ void HarmonieDesCouleurs::imageIsSet(bool imageValide){
         }
         //Image modifiée
         ui->GenererImgFinal->setVisible(true);
+        imageIsCorrected = false;
     }
 }
 
@@ -639,7 +679,6 @@ void HarmonieDesCouleurs::on_colorSelector_clicked() //Appui "choix couleur pale
 
 void HarmonieDesCouleurs::on_dom_colors_clicked() //Appui sur génération des couleurs dominantes
 {
-
     if(imageValide){
         QByteArray chemin = cheminFichier.toLocal8Bit();
         const char* nomImage = chemin.data();
@@ -808,6 +847,49 @@ void HarmonieDesCouleurs::on_GenererImgFinal_clicked()
             ui->final_image_label->setPixmap(QPixmap::fromImage(image));
             imageModifiee = true;
             imageIsModified(imageModifiee);
+            ui->final_legende->setText("Image Modifiée");
+        }
+        mainWindow->setEnabled(true);
+        QApplication::restoreOverrideCursor();
+        thread->quit();
+    });
+    thread->start();
+}
+
+void HarmonieDesCouleurs::on_correction_clicked(){
+    QThread* thread = new QThread;
+    QObject::connect(thread, &QThread::started, [=]() {
+        QApplication::setOverrideCursor(Qt::WaitCursor);
+        QWidget *mainWindow = QApplication::activeWindow();
+        mainWindow->setEnabled(false);
+
+        if(imageValide && colorChosenBool){
+            //char nomImage[cheminFichier.length()+1];
+            //strcpy(nomImage,cheminFichier.toLocal8Bit().constData());
+            QByteArray chemin = cheminFichier.toLocal8Bit();
+            char* nomImage = chemin.data();
+            //qDebug() << "Générer image de : " << nomImage;
+            //char nomImageCorrige[] = "/tmp/Img_Corrigee.ppm";
+            //char nomImageTransformee[] ="/tmp/Image_Transform.ppm";
+
+            QImage oldimagecorrige("/tmp/Img_Corrigee.ppm");
+            if(!oldimagecorrige.isNull()){
+                oldimagecorrige.detach();
+            }
+
+            ImageCorrige(nomImage, type);
+
+            QImage imagecorrigee("/tmp/Img_Corrigee.ppm");
+            if(imagecorrigee.width()>imagecorrigee.height()){
+                imagecorrigee = imagecorrigee.scaledToWidth(ui->final_image_label->width(),Qt::SmoothTransformation);
+                ui->final_fond_pola->setStyleSheet(QString("background-color:qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:1, stop:0 rgba(204, 204, 204, 255), stop:0.5 rgba(240, 240, 240, 255), stop:1 rgba(204, 204, 204, 255))"));
+            }else{
+                imagecorrigee = imagecorrigee.scaledToHeight(ui->final_image_label->height(),Qt::SmoothTransformation);
+                ui->final_fond_pola->setStyleSheet(QString("background-color:qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:1, stop:0 rgba(204, 204, 204, 255), stop:0.5 rgba(240, 240, 240, 255), stop:1 rgba(204, 204, 204, 255))"));
+            }
+            ui->final_image_label->setFixedSize(ui->final_fond_pola->size());
+            ui->final_image_label->setPixmap(QPixmap::fromImage(imagecorrigee));
+            imageIsCorrected = true;
         }
         mainWindow->setEnabled(true);
         QApplication::restoreOverrideCursor();
@@ -827,13 +909,28 @@ void HarmonieDesCouleurs::imageIsModified(bool imageModifiee){
         ui->menuExporterImg->setEnabled(true);
         ui->actionExportPNG->setEnabled(true);
         ui->actionExportJPEG->setEnabled(true);
+
+        if(type == 3 || type == 4){
+            ui->correction->setVisible(true);
+        }else{
+            ui->correction->setVisible(false);
+        }
+
+        imageIsCorrected = false;
     }
 }
 
 void HarmonieDesCouleurs::on_Save_image_clicked()
 {
     if(imageModifiee){
-        QImage imageTransformee("/tmp/Image_Transform.ppm");
+        QImage imageTransformee;
+        if(imageIsCorrected){
+            imageTransformee.load("/tmp/Img_Corrigee.ppm");
+        }else{
+            imageTransformee.load("/tmp/Image_Transform.ppm");
+        }
+
+        qDebug() << "save :" << imageIsCorrected;
         QFileInfo info;
         if(importeFichier){
             info.setFile(importeCheminFichier);
@@ -937,6 +1034,9 @@ void HarmonieDesCouleurs::on_Supprimer_clicked() //Appui sur le bouton "Supprime
         ui->final_image_label->setFixedSize(300,300);
         ui->final_image_label->setAlignment(Qt::AlignCenter);
         ui->final_image_label->setText("Veuillez sélectionner une image source...");
+
+        ui->correction->setVisible(false);
+        type = 0;
 
 
     } else {

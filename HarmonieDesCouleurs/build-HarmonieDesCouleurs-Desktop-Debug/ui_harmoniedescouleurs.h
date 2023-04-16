@@ -77,6 +77,7 @@ public:
     QLabel *valeurSlider;
     QSlider *horizontalSlider;
     QPushButton *Save_image;
+    QPushButton *correction;
     QMenuBar *menubar;
     QMenu *menuMenu;
     QMenu *menuImporterImg;
@@ -332,6 +333,10 @@ public:
         Save_image->setCheckable(false);
         Save_image->setAutoDefault(false);
         Save_image->setFlat(false);
+        correction = new QPushButton(centralwidget);
+        correction->setObjectName(QString::fromUtf8("correction"));
+        correction->setGeometry(QRect(870, 440, 80, 30));
+        correction->setStyleSheet(QString::fromUtf8("font: 11pt \"Sawasdee\";"));
         HarmonieDesCouleurs->setCentralWidget(centralwidget);
         background->raise();
         horizontalLayoutWidget->raise();
@@ -347,6 +352,7 @@ public:
         colorChosenUI->raise();
         verticalLayoutWidget->raise();
         Save_image->raise();
+        correction->raise();
         menubar = new QMenuBar(HarmonieDesCouleurs);
         menubar->setObjectName(QString::fromUtf8("menubar"));
         menubar->setGeometry(QRect(0, 0, 960, 22));
@@ -431,6 +437,7 @@ public:
         radioB__Text_2->setText(QCoreApplication::translate("HarmonieDesCouleurs", "Largeur de la bande :", nullptr));
         valeurSlider->setText(QCoreApplication::translate("HarmonieDesCouleurs", "(s\303\251lectionner une valeur)", nullptr));
         Save_image->setText(QCoreApplication::translate("HarmonieDesCouleurs", "Sauvegarder l'image", nullptr));
+        correction->setText(QCoreApplication::translate("HarmonieDesCouleurs", "Correction", nullptr));
         menuMenu->setTitle(QCoreApplication::translate("HarmonieDesCouleurs", "Fichier", nullptr));
         menuImporterImg->setTitle(QCoreApplication::translate("HarmonieDesCouleurs", "Importer...", nullptr));
         menuExporterImg->setTitle(QCoreApplication::translate("HarmonieDesCouleurs", "Exporter...", nullptr));
