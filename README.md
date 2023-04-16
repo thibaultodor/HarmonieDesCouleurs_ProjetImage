@@ -15,4 +15,4 @@
 * [Compte rendu n°8](https://github.com/thibaultodor/HarmonieDesCouleurs_ProjetImage/blob/main/Comptes%20Rendus/Harmonie_des_Couleurs_CR8.pdf)
 
 ## Vidéo de présentation 📹
-* [Lien de la vidéo] https://youtu.be/ThdodNuJ9NE
+* [Lien de la vidéo](https://youtu.be/ThdodNuJ9NE)
