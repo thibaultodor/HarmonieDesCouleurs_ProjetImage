@@ -14,6 +14,9 @@
 * [Compte rendu n°7](https://github.com/thibaultodor/HarmonieDesCouleurs_ProjetImage/blob/main/Comptes%20Rendus/Harmonie_des_Couleurs_CR7.pdf)
 * [Compte rendu n°8](https://github.com/thibaultodor/HarmonieDesCouleurs_ProjetImage/blob/main/Comptes%20Rendus/Harmonie_des_Couleurs_CR8.pdf)
 
+## Diapositives de la présentation finale 📺
+* [Lien des diapositives](https://github.com/thibaultodor/HarmonieDesCouleurs_ProjetImage/blob/main/Pr%C3%A9sentations/Harmonie%20des%20couleurs%20-%20diapo%20final.pdf)
+
 ## Vidéo de présentation 📹
 [![Lien de la vidéo](https://img.youtube.com/vi/ThdodNuJ9NE/0.jpg)](https://youtu.be/ThdodNuJ9NE)
 
